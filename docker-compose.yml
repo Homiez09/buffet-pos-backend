@@ -1,0 +1,36 @@
+services:
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - buffet-pos-network
+    restart: on-failure
+
+  phpmyadmin:
+    image: phpmyadmin
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: ${DB_USERNAME}
+      PMA_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "9090:80"
+    networks:
+      - buffet-pos-network
+    restart: on-failure
+volumes:
+  db-data:
+    driver: local
+networks:
+  buffet-pos-network:
+    driver: bridge
