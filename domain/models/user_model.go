@@ -1,10 +1,16 @@
 package models
 
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
 type User struct {
-	ID        string `json:"id" db:"id"`
-	Name      string `json:"name" db:"name"`
-	Email     string `json:"email" db:"email"`
-	Password  string `json:"password" db:"password"`
-	CreatedAt string `json:"createdAt" db:"created_at"`
-	UpdatedAt string `json:"updatedAt" db:"updated_at"`
+	ID        uuid.UUID `json:"id" gorm:"primaryKey"`
+	Name      string    `json:"name" gorm:"type:varchar(255)"`
+	Email     string    `json:"email" gorm:"type:varchar(255)"`
+	Password  string    `json:"password" gorm:"type:varchar(255)"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
