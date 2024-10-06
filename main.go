@@ -7,8 +7,14 @@ import (
 	"github.com/cs471-buffetpos/buffet-pos-backend/internal/adapters/gorm"
 	"github.com/cs471-buffetpos/buffet-pos-backend/internal/adapters/rest"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/swagger"
+
+	_ "github.com/cs471-buffetpos/buffet-pos-backend/docs"
 )
 
+// @title BuffetPOS API
+// @description This is the BuffetPOS API documentation.
+// @version 1.0
 func main() {
 	app := fiber.New()
 	cfg := configs.NewConfig()
@@ -18,6 +24,8 @@ func main() {
 	userRepo := gorm.NewUserGormRepository(db)
 	userService := usecases.NewUserService(userRepo, cfg)
 	userHandler := rest.NewUserHandler(userService)
+
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("BuffetPOS is running 🎉")

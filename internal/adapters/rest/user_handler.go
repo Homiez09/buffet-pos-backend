@@ -56,6 +56,18 @@ func (u *userHandler) Register(c *fiber.Ctx) error {
 	})
 }
 
+// Login
+// @Summary User login.
+// @Description Check user credentials and return user data.
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param request body requests.UserLoginRequest true "User login request"
+// @Success 200 {object} responses.UserLoginResponse
+// @Failure 400
+// @Failure 401
+// @Failure 500
+// @Router /login [post]
 func (u *userHandler) Login(c *fiber.Ctx) error {
 	// Parse request
 	var req *requests.UserLoginRequest
