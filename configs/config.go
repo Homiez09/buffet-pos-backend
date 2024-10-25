@@ -18,9 +18,10 @@ type Config struct {
 func NewConfig() *Config {
 	config := &Config{}
 	viper.SetConfigFile(".env")
+	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalln("❌ Error reading config file", err)
+		log.Fatalln("⚠️ .env file not found, relying on environment variables", err)
 	}
 
 	if err := viper.Unmarshal(config); err != nil {
