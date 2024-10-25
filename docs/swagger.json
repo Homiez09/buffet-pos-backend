@@ -7,7 +7,7 @@
         "version": "1.0"
     },
     "paths": {
-        "/login": {
+        "/auth/login": {
             "post": {
                 "description": "Check user credentials and return user data.",
                 "consumes": [
@@ -50,7 +50,7 @@
                 }
             }
         },
-        "/register": {
+        "/auth/register": {
             "post": {
                 "description": "Register a new user.",
                 "consumes": [

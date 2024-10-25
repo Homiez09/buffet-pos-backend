@@ -34,7 +34,7 @@ func NewUserHandler(service usecases.UserUseCase) UserHandler {
 // @Failure 400
 // @Failure 401
 // @Failure 500
-// @Router /register [post]
+// @Router /auth/register [post]
 func (u *userHandler) Register(c *fiber.Ctx) error {
 	// Parse request
 	var req *requests.UserRegisterRequest
@@ -79,7 +79,7 @@ func (u *userHandler) Register(c *fiber.Ctx) error {
 // @Failure 400
 // @Failure 401
 // @Failure 500
-// @Router /login [post]
+// @Router /auth/login [post]
 func (u *userHandler) Login(c *fiber.Ctx) error {
 	// Parse request
 	var req *requests.UserLoginRequest

@@ -54,7 +54,7 @@ info:
   title: BuffetPOS API
   version: "1.0"
 paths:
-  /login:
+  /auth/login:
     post:
       consumes:
       - application/json
@@ -82,7 +82,7 @@ paths:
       summary: User login.
       tags:
       - User
-  /register:
+  /auth/register:
     post:
       consumes:
       - application/json
