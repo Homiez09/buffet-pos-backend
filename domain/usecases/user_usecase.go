@@ -71,7 +71,7 @@ func (u *userService) Login(ctx context.Context, req *requests.UserLoginRequest)
 	}
 
 	// Generate JWT token
-	expireAt := time.Now().Add(time.Hour * 72) // 3 Days
+	expireAt := time.Now().Add(time.Hour * 24) // 1 Day
 
 	claims := jwt.MapClaims{
 		"id":    user.ID,

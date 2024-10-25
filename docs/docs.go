@@ -60,6 +60,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.Role": {
+            "type": "string",
+            "enum": [
+                "manager",
+                "employee"
+            ],
+            "x-enum-varnames": [
+                "Manager",
+                "Employee"
+            ]
+        },
         "requests.UserLoginRequest": {
             "type": "object",
             "required": [
@@ -78,9 +89,6 @@ const docTemplate = `{
         "responses.UserLoginResponse": {
             "type": "object",
             "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string"
                 },
@@ -90,10 +98,10 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "token": {
-                    "type": "string"
+                "role": {
+                    "$ref": "#/definitions/models.Role"
                 },
-                "updatedAt": {
+                "token": {
                     "type": "string"
                 }
             }

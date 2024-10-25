@@ -1,4 +1,12 @@
 definitions:
+  models.Role:
+    enum:
+    - manager
+    - employee
+    type: string
+    x-enum-varnames:
+    - Manager
+    - Employee
   requests.UserLoginRequest:
     properties:
       email:
@@ -11,17 +19,15 @@ definitions:
     type: object
   responses.UserLoginResponse:
     properties:
-      createdAt:
-        type: string
       email:
         type: string
       id:
         type: string
       name:
         type: string
+      role:
+        $ref: '#/definitions/models.Role'
       token:
-        type: string
-      updatedAt:
         type: string
     type: object
 info:
