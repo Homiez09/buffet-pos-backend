@@ -2,6 +2,7 @@ package configs
 
 import (
 	"log"
+	"os"
 
 	"github.com/spf13/viper"
 )
@@ -17,12 +18,22 @@ type Config struct {
 
 func NewConfig() *Config {
 	config := &Config{}
-	viper.AutomaticEnv()
-	viper.SetConfigFile(".env")
 
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalln("⚠️ .env file not found, relying on environment variables")
+	if _, err := os.Stat(".env"); err == nil {
+		viper.SetConfigFile(".env")
+		if err := viper.ReadInConfig(); err != nil {
+			log.Fatalln("unable to read .env file: ", err)
+		}
 	}
+
+	viper.AutomaticEnv()
+
+	viper.BindEnv("DB_HOST")
+	viper.BindEnv("DB_DATABASE")
+	viper.BindEnv("DB_USERNAME")
+	viper.BindEnv("DB_PASSWORD")
+	viper.BindEnv("DB_PORT")
+	viper.BindEnv("JWT_SECRET")
 
 	if err := viper.Unmarshal(config); err != nil {
 		log.Fatalln("❌ Unable to decode into struct", err)
