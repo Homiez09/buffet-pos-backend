@@ -23,6 +23,18 @@ func NewUserHandler(service usecases.UserUseCase) UserHandler {
 	}
 }
 
+// Register
+// @Summary User register (Employee Role by default)
+// @Description Register a new user.
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param request body requests.UserRegisterRequest true "User register request"
+// @Success 200 {object} responses.UserRegisterResponse
+// @Failure 400
+// @Failure 401
+// @Failure 500
+// @Router /register [post]
 func (u *userHandler) Register(c *fiber.Ctx) error {
 	// Parse request
 	var req *requests.UserRegisterRequest
@@ -51,7 +63,7 @@ func (u *userHandler) Register(c *fiber.Ctx) error {
 		}
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "User registered successfully",
 	})
 }

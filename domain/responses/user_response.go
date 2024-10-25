@@ -12,3 +12,7 @@ type UserLoginResponse struct {
 	Role  models.Role `json:"role"`
 	Token string      `json:"token"`
 }
+
+type UserRegisterResponse struct {
+	Message string `json:"message"`
+}

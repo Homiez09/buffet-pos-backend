@@ -49,6 +49,49 @@
                     }
                 }
             }
+        },
+        "/register": {
+            "post": {
+                "description": "Register a new user.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "User register (Employee Role by default)",
+                "parameters": [
+                    {
+                        "description": "User register request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.UserRegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UserRegisterResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -78,6 +121,25 @@
                 }
             }
         },
+        "requests.UserRegisterRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
         "responses.UserLoginResponse": {
             "type": "object",
             "properties": {
@@ -94,6 +156,14 @@
                     "$ref": "#/definitions/models.Role"
                 },
                 "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.UserRegisterResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
                     "type": "string"
                 }
             }
