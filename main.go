@@ -10,7 +10,6 @@ import (
 	"github.com/cs471-buffetpos/buffet-pos-backend/internal/adapters/rest"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
-	"github.com/golang-jwt/jwt"
 
 	_ "github.com/cs471-buffetpos/buffet-pos-backend/docs"
 )
@@ -28,6 +27,10 @@ func main() {
 	userService := usecases.NewUserService(userRepo, cfg)
 	userHandler := rest.NewUserHandler(userService)
 
+	tableRepo := gorm.NewTableGormRepository(db)
+	tableService := usecases.NewTableService(tableRepo, cfg)
+	tableHandler := rest.NewTableHandler(tableService)
+
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	app.Get("/", func(c *fiber.Ctx) error {
@@ -39,10 +42,8 @@ func main() {
 	auth.Post("/login", userHandler.Login)
 
 	manage := app.Group("/manage", middleware.AuthMiddleware(cfg), middleware.RoleMiddleware(models.Employee, models.Manager))
-	manage.Get("/", func(c *fiber.Ctx) error {
-		claims := c.Locals("user").(jwt.MapClaims)
-		return c.SendString("Manage page for " + claims["email"].(string))
-	})
+	manage.Post("/tables", tableHandler.AddTable)
+	manage.Get("/tables/:id", tableHandler.FindTableByID)
 
 	app.Listen(":3000")
 }

@@ -7,6 +7,13 @@ definitions:
     x-enum-varnames:
     - Manager
     - Employee
+  requests.AddTableRequest:
+    properties:
+      tableName:
+        type: string
+    required:
+    - tableName
+    type: object
   requests.UserLoginRequest:
     properties:
       email:
@@ -29,6 +36,28 @@ definitions:
     - email
     - name
     - password
+    type: object
+  responses.AddTableResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  responses.FindTableResponse:
+    properties:
+      accessCode:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      isAvailable:
+        type: boolean
+      qrcode:
+        type: string
+      tableName:
+        type: string
+      updatedAt:
+        type: string
     type: object
   responses.UserLoginResponse:
     properties:
@@ -110,4 +139,73 @@ paths:
       summary: User register (Employee Role by default)
       tags:
       - User
+  /manage/tables:
+    post:
+      consumes:
+      - application/json
+      description: Add a new table.
+      parameters:
+      - description: Add Table request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.AddTableRequest'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.AddTableResponse'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Add Table
+      tags:
+      - Manage
+  /manage/tables/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Find table by ID.
+      parameters:
+      - description: Table ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.FindTableResponse'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Find Table By ID
+      tags:
+      - Manage
 swagger: "2.0"

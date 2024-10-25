@@ -1,10 +1,12 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
 	valid "github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 )
 
 var validate = valid.New()
@@ -32,4 +34,12 @@ func ValidateStruct[T any](payload T) *ValidateError {
 	}
 
 	return nil
+}
+
+func ValidateUUID(input string) (*string, error) {
+	_, err := uuid.Parse(input)
+	if err != nil {
+		return nil, errors.New("invalid UUID format")
+	}
+	return &input, nil
 }
