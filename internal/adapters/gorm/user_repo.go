@@ -31,6 +31,7 @@ func (u *UserGormRepository) Create(ctx context.Context, req *requests.UserRegis
 		Name:     req.Name,
 		Email:    req.Email,
 		Password: req.Password,
+		Role:     models.Employee,
 	}
 
 	result := u.DB.Create(user)

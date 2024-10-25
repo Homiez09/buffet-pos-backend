@@ -71,12 +71,13 @@ func (u *userService) Login(ctx context.Context, req *requests.UserLoginRequest)
 	}
 
 	// Generate JWT token
-	expireAt := time.Now().Add(time.Hour * 1)
+	expireAt := time.Now().Add(time.Hour * 72) // 3 Days
 
 	claims := jwt.MapClaims{
 		"id":    user.ID,
 		"name":  user.Name,
 		"email": user.Email,
+		"role":  user.Role,
 		"exp":   expireAt.Unix(),
 	}
 
@@ -89,11 +90,10 @@ func (u *userService) Login(ctx context.Context, req *requests.UserLoginRequest)
 	}
 
 	return &responses.UserLoginResponse{
-		ID:        user.ID,
-		Name:      user.Name,
-		Email:     user.Email,
-		Token:     tokenString,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
+		ID:    user.ID,
+		Name:  user.Name,
+		Email: user.Email,
+		Role:  user.Role,
+		Token: tokenString,
 	}, nil
 }

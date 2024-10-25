@@ -1,16 +1,14 @@
 package responses
 
 import (
-	"time"
-
+	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
 	"github.com/google/uuid"
 )
 
 type UserLoginResponse struct {
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
-	ID        uuid.UUID `json:"id"`
-	Name      string    `json:"name"`
-	Email     string    `json:"email"`
-	Token     string    `json:"token"`
+	ID    uuid.UUID   `json:"id"`
+	Name  string      `json:"name"`
+	Email string      `json:"email"`
+	Role  models.Role `json:"role"`
+	Token string      `json:"token"`
 }
