@@ -8,35 +8,35 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type TableHandler interface {
-	AddTable(c *fiber.Ctx) error
-	FindAllTables(c *fiber.Ctx) error
-	FindTableByID(c *fiber.Ctx) error
+type CategoryHandler interface {
+	AddCategory(c *fiber.Ctx) error
+	FindAllCategories(c *fiber.Ctx) error
+	FindCategoryByID(c *fiber.Ctx) error
 }
 
-type tableHandler struct {
-	service usecases.TableUseCase
+type categoryHandler struct {
+	service usecases.CategoryUseCase
 }
 
-func NewTableHandler(service usecases.TableUseCase) TableHandler {
-	return &tableHandler{
+func NewCategoryHandler(service usecases.CategoryUseCase) CategoryHandler {
+	return &categoryHandler{
 		service: service,
 	}
 }
 
-// Add Table
-// @Summary Add Table
-// @Description Add a new table.
+// Add Category
+// @Summary Add Category
+// @Description Add a new category.
 // @Tags Manage
 // @Accept json
 // @Produce json
-// @Param request body requests.AddTableRequest true "Add Table request"
+// @Param request body requests.AddCategoryRequest true "Add Category request"
 // @Success 200 {object} responses.SuccessResponse
-// @Router /manage/tables [post]
+// @Router /manage/categories [post]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
-func (t *tableHandler) AddTable(c *fiber.Ctx) error {
-	var req *requests.AddTableRequest
+func (ct *categoryHandler) AddCategory(c *fiber.Ctx) error {
+	var req *requests.AddCategoryRequest
 	if err := c.BodyParser(&req); err != nil {
 		c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": err.Error(),
@@ -47,11 +47,11 @@ func (t *tableHandler) AddTable(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(err)
 	}
 
-	if err := t.service.AddTable(c.Context(), req); err != nil {
+	if err := ct.service.AddCategory(c.Context(), req); err != nil {
 		switch err {
-		case exceptions.ErrDuplicatedTableName:
+		case exceptions.ErrDuplicatedCategoryName:
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "Table name already exists",
+				"error": "Category name already exists",
 			})
 		default:
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -61,42 +61,42 @@ func (t *tableHandler) AddTable(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Table added successfully",
+		"message": "Category added successfully",
 	})
 }
 
-// Find All Tables
-// @Summary Find All Tables
-// @Description Find all tables.
+// Find All Categories
+// @Summary Find All Categories
+// @Description Find all categories.
 // @Tags Manage
 // @Accept json
 // @Produce json
-// @Success 200 {array} responses.TableDetail
-// @Router /manage/tables [get]
+// @Success 200 {array} responses.CategoryDetail
+// @Router /manage/categories [get]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
-func (t *tableHandler) FindAllTables(c *fiber.Ctx) error {
-	tables, err := t.service.FindAllTables(c.Context())
+func (ct *categoryHandler) FindAllCategories(c *fiber.Ctx) error {
+	categories, err := ct.service.FindAllCategories(c.Context())
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
 		})
 	}
-	return c.Status(fiber.StatusOK).JSON(tables)
+	return c.Status(fiber.StatusOK).JSON(categories)
 }
 
-// Find Table By ID
-// @Summary Find Table By ID
-// @Description Find table by ID.
+// Find Category By ID
+// @Summary Find Category By ID
+// @Description Find category by ID.
 // @Tags Manage
 // @Accept json
 // @Produce json
-// @Param id path string true "Table ID"
-// @Success 200 {object} responses.TableDetail
-// @Router /manage/tables/{id} [get]
+// @Param id path string true "Category ID"
+// @Success 200 {object} responses.CategoryDetail
+// @Router /manage/categories/{id} [get]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
-func (t *tableHandler) FindTableByID(c *fiber.Ctx) error {
+func (ct *categoryHandler) FindCategoryByID(c *fiber.Ctx) error {
 	id, err := utils.ValidateUUID(c.Params("id"))
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -104,12 +104,12 @@ func (t *tableHandler) FindTableByID(c *fiber.Ctx) error {
 		})
 	}
 
-	table, err := t.service.FindTableByID(c.Context(), *id)
+	category, err := ct.service.FindCategoryByID(c.Context(), *id)
 	if err != nil {
 		switch err {
-		case exceptions.ErrTableNotFound:
+		case exceptions.ErrCategoryNotFound:
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-				"error": "Table not found",
+				"error": "Category not found",
 			})
 		default:
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -118,5 +118,5 @@ func (t *tableHandler) FindTableByID(c *fiber.Ctx) error {
 		}
 	}
 
-	return c.Status(fiber.StatusOK).JSON(table)
+	return c.Status(fiber.StatusOK).JSON(category)
 }

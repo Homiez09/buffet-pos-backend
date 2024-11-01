@@ -31,6 +31,10 @@ func main() {
 	tableService := usecases.NewTableService(tableRepo, cfg)
 	tableHandler := rest.NewTableHandler(tableService)
 
+	categoryRepo := gorm.NewCategoryGormRepository(db)
+	categoryService := usecases.NewCategoryService(categoryRepo, cfg)
+	categoryHandler := rest.NewCategoryHandler(categoryService)
+
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	app.Get("/", func(c *fiber.Ctx) error {
@@ -42,8 +46,13 @@ func main() {
 	auth.Post("/login", userHandler.Login)
 
 	manage := app.Group("/manage", middleware.AuthMiddleware(cfg), middleware.RoleMiddleware(models.Employee, models.Manager))
-	manage.Post("/tables", tableHandler.AddTable)
+	manage.Get("/tables", tableHandler.FindAllTables)
 	manage.Get("/tables/:id", tableHandler.FindTableByID)
+	manage.Post("/tables", tableHandler.AddTable)
+
+	manage.Get("/categories", categoryHandler.FindAllCategories)
+	manage.Get("/categories/:id", categoryHandler.FindCategoryByID)
+	manage.Post("/categories", categoryHandler.AddCategory)
 
 	app.Listen(":3000")
 }

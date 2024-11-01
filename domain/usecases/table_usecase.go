@@ -12,7 +12,8 @@ import (
 
 type TableUseCase interface {
 	AddTable(ctx context.Context, req *requests.AddTableRequest) error
-	FindTableByID(ctx context.Context, tableID string) (*responses.FindTableResponse, error)
+	FindAllTables(ctx context.Context) ([]responses.TableDetail, error)
+	FindTableByID(ctx context.Context, tableID string) (*responses.TableDetail, error)
 }
 
 type tableService struct {
@@ -40,7 +41,30 @@ func (t *tableService) AddTable(ctx context.Context, req *requests.AddTableReque
 	return t.tableRepo.Create(ctx, req)
 }
 
-func (t *tableService) FindTableByID(ctx context.Context, tableID string) (*responses.FindTableResponse, error) {
+func (t *tableService) FindAllTables(ctx context.Context) ([]responses.TableDetail, error) {
+	tables, err := t.tableRepo.FindAll(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	tableDetails := make([]responses.TableDetail, 0)
+	for _, table := range tables {
+		tableDetails = append(tableDetails, responses.TableDetail{
+			BaseTable: responses.BaseTable{
+				ID:          table.ID,
+				TableName:   table.TableName,
+				IsAvailable: table.IsAvailable,
+				QRCode:      table.QRCode,
+				AccessCode:  table.AccessCode,
+				CreatedAt:   table.CreatedAt,
+				UpdatedAt:   table.UpdatedAt,
+			},
+		})
+	}
+	return tableDetails, nil
+}
+
+func (t *tableService) FindTableByID(ctx context.Context, tableID string) (*responses.TableDetail, error) {
 	table, err := t.tableRepo.FindByID(ctx, tableID)
 	if err != nil {
 		return nil, err
@@ -50,13 +74,15 @@ func (t *tableService) FindTableByID(ctx context.Context, tableID string) (*resp
 		return nil, exceptions.ErrTableNotFound
 	}
 
-	return &responses.FindTableResponse{
-		ID:          table.ID,
-		TableName:   table.TableName,
-		IsAvailable: table.IsAvailable,
-		QRCode:      table.QRCode,
-		AccessCode:  table.AccessCode,
-		CreatedAt:   table.CreatedAt,
-		UpdatedAt:   table.UpdatedAt,
+	return &responses.TableDetail{
+		BaseTable: responses.BaseTable{
+			ID:          table.ID,
+			TableName:   table.TableName,
+			IsAvailable: table.IsAvailable,
+			QRCode:      table.QRCode,
+			AccessCode:  table.AccessCode,
+			CreatedAt:   table.CreatedAt,
+			UpdatedAt:   table.UpdatedAt,
+		},
 	}, nil
 }

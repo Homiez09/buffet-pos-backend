@@ -7,6 +7,13 @@ definitions:
     x-enum-varnames:
     - Manager
     - Employee
+  requests.AddCategoryRequest:
+    properties:
+      categoryName:
+        type: string
+    required:
+    - categoryName
+    type: object
   requests.AddTableRequest:
     properties:
       tableName:
@@ -37,12 +44,23 @@ definitions:
     - name
     - password
     type: object
-  responses.AddTableResponse:
+  responses.CategoryDetail:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  responses.SuccessResponse:
     properties:
       message:
         type: string
     type: object
-  responses.FindTableResponse:
+  responses.TableDetail:
     properties:
       accessCode:
         type: string
@@ -102,12 +120,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.UserLoginResponse'
-        "400":
-          description: Bad Request
-        "401":
-          description: Unauthorized
-        "500":
-          description: Internal Server Error
       summary: User login.
       tags:
       - User
@@ -130,16 +142,115 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.UserRegisterResponse'
-        "400":
-          description: Bad Request
-        "401":
-          description: Unauthorized
-        "500":
-          description: Internal Server Error
       summary: User register (Employee Role by default)
       tags:
       - User
+  /manage/categories:
+    get:
+      consumes:
+      - application/json
+      description: Find all categories.
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/responses.CategoryDetail'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Find All Categories
+      tags:
+      - Manage
+    post:
+      consumes:
+      - application/json
+      description: Add a new category.
+      parameters:
+      - description: Add Category request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.AddCategoryRequest'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Add Category
+      tags:
+      - Manage
+  /manage/categories/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Find category by ID.
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.CategoryDetail'
+      security:
+      - ApiKeyAuth: []
+      summary: Find Category By ID
+      tags:
+      - Manage
   /manage/tables:
+    get:
+      consumes:
+      - application/json
+      description: Find all tables.
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/responses.TableDetail'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Find All Tables
+      tags:
+      - Manage
     post:
       consumes:
       - application/json
@@ -162,13 +273,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.AddTableResponse'
-        "400":
-          description: Bad Request
-        "401":
-          description: Unauthorized
-        "500":
-          description: Internal Server Error
+            $ref: '#/definitions/responses.SuccessResponse'
       security:
       - ApiKeyAuth: []
       summary: Add Table
@@ -196,13 +301,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.FindTableResponse'
-        "400":
-          description: Bad Request
-        "401":
-          description: Unauthorized
-        "500":
-          description: Internal Server Error
+            $ref: '#/definitions/responses.TableDetail'
       security:
       - ApiKeyAuth: []
       summary: Find Table By ID

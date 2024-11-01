@@ -31,9 +31,6 @@ func NewUserHandler(service usecases.UserUseCase) UserHandler {
 // @Produce json
 // @Param request body requests.UserRegisterRequest true "User register request"
 // @Success 200 {object} responses.UserRegisterResponse
-// @Failure 400
-// @Failure 401
-// @Failure 500
 // @Router /auth/register [post]
 func (u *userHandler) Register(c *fiber.Ctx) error {
 	// Parse request
@@ -76,9 +73,6 @@ func (u *userHandler) Register(c *fiber.Ctx) error {
 // @Produce json
 // @Param request body requests.UserLoginRequest true "User login request"
 // @Success 200 {object} responses.UserLoginResponse
-// @Failure 400
-// @Failure 401
-// @Failure 500
 // @Router /auth/login [post]
 func (u *userHandler) Login(c *fiber.Ctx) error {
 	// Parse request

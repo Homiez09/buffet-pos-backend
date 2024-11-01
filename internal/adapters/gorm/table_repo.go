@@ -40,6 +40,15 @@ func (t *TableGormRepository) Create(ctx context.Context, req *requests.AddTable
 	return result.Error
 }
 
+func (t *TableGormRepository) FindAll(ctx context.Context) ([]models.Table, error) {
+	var tables []models.Table
+	result := t.DB.Find(&tables)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return tables, nil
+}
+
 func (t *TableGormRepository) FindByID(ctx context.Context, tableID string) (*models.Table, error) {
 	var table models.Table
 	result := t.DB.Where("id = ?", tableID).First(&table)

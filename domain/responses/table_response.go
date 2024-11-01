@@ -6,16 +6,17 @@ import (
 	"github.com/google/uuid"
 )
 
-type FindTableResponse struct {
+type BaseTable struct {
 	ID          uuid.UUID `json:"id"`
 	TableName   string    `json:"tableName"`
 	IsAvailable bool      `json:"isAvailable"`
-	QRCode      *string   `json:"qrcode"`
-	AccessCode  *string   `json:"accessCode"`
+	QRCode      *string   `json:"qrcode,omitempty"`
+	AccessCode  *string   `json:"accessCode,omitempty"`
 	CreatedAt   time.Time `json:"createdAt"`
 	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
-type AddTableResponse struct {
-	Message string `json:"message"`
+type TableDetail struct {
+	BaseTable
+	// without created_at and updatedAt
 }
