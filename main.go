@@ -1,6 +1,10 @@
 package main
 
 import (
+	"fmt"
+	"log"
+
+	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cs471-buffetpos/buffet-pos-backend/bootstrap"
 	"github.com/cs471-buffetpos/buffet-pos-backend/configs"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
@@ -20,6 +24,11 @@ import (
 func main() {
 	app := fiber.New()
 	cfg := configs.NewConfig()
+	cld, err := cloudinary.NewFromURL(cfg.Cloudinary_url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(cld)
 
 	db := bootstrap.NewDB(cfg)
 
