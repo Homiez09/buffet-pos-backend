@@ -19,6 +19,8 @@ func main() {
 		&models.Menu{},
 		&models.BuffetPack{},
 		&models.Invoice{},
+		&models.Order{},
+		&models.OrderItem{},
 	); err != nil {
 		log.Fatal(err)
 	}
