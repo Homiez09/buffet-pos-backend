@@ -12,6 +12,7 @@ type TableHandler interface {
 	AddTable(c *fiber.Ctx) error
 	FindAllTables(c *fiber.Ctx) error
 	FindTableByID(c *fiber.Ctx) error
+	Edit(c *fiber.Ctx) error
 }
 
 type tableHandler struct {
@@ -119,4 +120,44 @@ func (t *tableHandler) FindTableByID(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(table)
+}
+
+// Edit Table
+// @Summary Edit Table
+// @Description Edit Table by ID.
+// @Tags Manage
+// @Accept json
+// @Produce json
+// @Param request body requests.EditTableRequest true "Edit Table Request"
+// @Success 200 {object} responses.SuccessResponse
+// @Router /manage/tables [put]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
+func (t *tableHandler) Edit(c *fiber.Ctx) error {
+	var req *requests.EditTableRequest
+	if err := c.BodyParser(&req); err != nil {
+		c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	if err := utils.ValidateStruct(req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(err)
+	}
+
+	if err := t.service.EditTable(c.Context(), req); err != nil {
+		switch err {
+		case exceptions.ErrTableNotFound:
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Table not found",
+			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Table edited successfully",
+	})
 }

@@ -9,6 +9,7 @@ import (
 
 type TableRepository interface {
 	Create(ctx context.Context, req *requests.AddTableRequest) error
+	Edit(ctx context.Context, req *requests.EditTableRequest) error
 	FindAll(ctx context.Context) ([]models.Table, error)
 	FindByID(ctx context.Context, email string) (*models.Table, error)
 	FindByName(ctx context.Context, name string) (*models.Table, error)

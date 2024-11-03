@@ -21,6 +21,16 @@ definitions:
     required:
     - tableName
     type: object
+  requests.EditTableRequest:
+    properties:
+      id:
+        type: string
+      tableName:
+        type: string
+    required:
+    - id
+    - tableName
+    type: object
   requests.UserLoginRequest:
     properties:
       email:
@@ -384,6 +394,34 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Add Table
+      tags:
+      - Manage
+    put:
+      consumes:
+      - application/json
+      description: Edit Table by ID.
+      parameters:
+      - description: Edit Table Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.EditTableRequest'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Edit Table
       tags:
       - Manage
   /manage/tables/{id}:
