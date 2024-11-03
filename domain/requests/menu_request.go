@@ -12,5 +12,5 @@ type AddMenuRequest struct {
 }
 
 type MenuFindByIDRequest struct {
-	Name string `json:"email"`
+	ID string `json:"id" validate:"required"`
 }

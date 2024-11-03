@@ -39,7 +39,7 @@ func (m *menuHandler) FindAll(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Get all Menu",
+		"message": "Get All Menus",
 		"data":    res,
 	})
 }
@@ -56,12 +56,12 @@ func (m *menuHandler) FindByID(c *fiber.Ctx) error {
 	if err := utils.ValidateStruct(req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(err)
 	}
-	res, err := m.service.FindByID(c.Context(), req.Name)
+	res, err := m.service.FindByID(c.Context(), req.ID)
 	if err != nil {
 		switch err {
 		case exceptions.ErrMenuNotFound:
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "Menu not have",
+				"error": "Menu not found",
 			})
 		default:
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -71,7 +71,7 @@ func (m *menuHandler) FindByID(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Get all Menu",
+		"message": "Menu find successfully",
 		"data":    res,
 	})
 }
