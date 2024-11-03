@@ -8,6 +8,7 @@ import (
 	"github.com/cs471-buffetpos/buffet-pos-backend/internal/adapters/gorm"
 	"github.com/cs471-buffetpos/buffet-pos-backend/internal/adapters/middleware"
 	"github.com/cs471-buffetpos/buffet-pos-backend/internal/adapters/rest"
+	"github.com/cs471-buffetpos/buffet-pos-backend/internal/infrastructure/cloudinary"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/swagger"
@@ -24,6 +25,8 @@ func main() {
 
 	db := bootstrap.NewDB(cfg)
 
+	cld := cloudinary.NewCloudinaryStorageService(cfg)
+
 	userRepo := gorm.NewUserGormRepository(db)
 	userService := usecases.NewUserService(userRepo, cfg)
 	userHandler := rest.NewUserHandler(userService)
@@ -35,6 +38,10 @@ func main() {
 	categoryRepo := gorm.NewCategoryGormRepository(db)
 	categoryService := usecases.NewCategoryService(categoryRepo, cfg)
 	categoryHandler := rest.NewCategoryHandler(categoryService)
+
+	menuRepo := gorm.NewMenuGormRepository(db)
+	menuService := usecases.NewMenuService(menuRepo, cfg, cld)
+	menuHandler := rest.NewMenuHandler(menuService)
 
 	app.Use(cors.New())
 
@@ -56,6 +63,10 @@ func main() {
 	manage.Get("/categories", categoryHandler.FindAllCategories)
 	manage.Get("/categories/:id", categoryHandler.FindCategoryByID)
 	manage.Post("/categories", categoryHandler.AddCategory)
+
+	manage.Get("/menus", menuHandler.FindAll)
+	manage.Get("/menus/:id", menuHandler.FindByID)
+	manage.Post("/menus", menuHandler.Create)
 
 	app.Listen(":3000")
 }

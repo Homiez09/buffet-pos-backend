@@ -5,14 +5,12 @@ import (
 
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
-	"github.com/cs471-buffetpos/buffet-pos-backend/internal/adapters/storage"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type MenuGormRepository struct {
-	DB             *gorm.DB
-	StorageService storage.StorageService
+	DB *gorm.DB
 }
 
 func NewMenuGormRepository(db *gorm.DB) *MenuGormRepository {
@@ -21,19 +19,13 @@ func NewMenuGormRepository(db *gorm.DB) *MenuGormRepository {
 	}
 }
 
-func (m *MenuGormRepository) Create(ctx context.Context, req *requests.AddMenuRequest) error {
+func (m *MenuGormRepository) Create(ctx context.Context, req *requests.AddMenuRequest, imageURL string) error {
 	id, err := uuid.NewV7()
 	if err != nil {
 		return err
 	}
 
-	categoryID, err := uuid.Parse(*req.CategoryID)
-	if err != nil {
-		return err
-	}
-
-	// Upload image to cloudinary
-	image, err := m.StorageService.UploadFile(ctx, req.Image)
+	categoryID, err := uuid.Parse(req.CategoryID)
 	if err != nil {
 		return err
 	}
@@ -41,9 +33,8 @@ func (m *MenuGormRepository) Create(ctx context.Context, req *requests.AddMenuRe
 	menu := &models.Menu{
 		ID:          id,
 		Name:        req.Name,
-		Price:       req.Price,
-		Description: req.Description,
-		ImageURL:    &image,
+		Description: &req.Description,
+		ImageURL:    &imageURL,
 		CategoryID:  &categoryID,
 	}
 

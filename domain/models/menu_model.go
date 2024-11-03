@@ -9,6 +9,5 @@ type Menu struct {
 	CategoryID  *uuid.UUID  `json:"categoryId" gorm:"type:uuid"`
 	ImageURL    *string     `json:"imageUrl" gorm:"type:varchar(255)"`
 	IsAvailable bool        `json:"isAvailable" gorm:"type:boolean"`
-	Price       float64     `json:"price" gorm:"type:decimal"`
 	OrderItems  []OrderItem `json:"orderItems" gorm:"foreignKey:MenuID"`
 }
