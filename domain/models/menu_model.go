@@ -1,9 +1,8 @@
 package models
 
 import (
-	"time"
-
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type Menu struct {
@@ -14,5 +13,5 @@ type Menu struct {
 	ImageURL    *string     `json:"imageUrl" gorm:"type:varchar(255)"`
 	IsAvailable bool        `json:"isAvailable" gorm:"type:boolean"`
 	OrderItems  []OrderItem `json:"orderItems" gorm:"foreignKey:MenuID"`
-	DeletedAt   *time.Time  `json:"deletedAt"`
+	DeletedAt   gorm.DeletedAt
 }
