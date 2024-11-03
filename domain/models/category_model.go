@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type Category struct {
@@ -12,4 +13,5 @@ type Category struct {
 	Menus     []Menu    `json:"menus" gorm:"foreignKey:CategoryID"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
+	DeletedAt gorm.DeletedAt
 }

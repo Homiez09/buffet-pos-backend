@@ -74,3 +74,28 @@ func (t *TableGormRepository) FindByName(ctx context.Context, tableName string) 
 	}
 	return &table, nil
 }
+
+func (t *TableGormRepository) Edit(ctx context.Context, req *requests.EditTableRequest) error {
+	table, err := t.FindByID(ctx, req.ID)
+	if err != nil {
+		return err
+	}
+	if table == nil {
+		return nil
+	}
+	table.TableName = req.TableName
+	result := t.DB.Save(table)
+	return result.Error
+}
+
+func (t *TableGormRepository) Delete(ctx context.Context, tableID string) error {
+	table, err := t.FindByID(ctx, tableID)
+	if err != nil {
+		return err
+	}
+	if table == nil {
+		return nil
+	}
+	result := t.DB.Delete(table)
+	return result.Error
+}

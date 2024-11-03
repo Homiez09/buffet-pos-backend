@@ -63,3 +63,8 @@ func (m *MenuGormRepository) FindByID(ctx context.Context, menuID string) (*mode
 	}
 	return &menu, nil
 }
+
+func (m *MenuGormRepository) Delete(ctx context.Context, menuID string) error {
+	result := m.DB.Where("id = ?", menuID).Delete(&models.Menu{})
+	return result.Error
+}

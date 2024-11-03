@@ -11,4 +11,5 @@ type MenuRepository interface {
 	Create(ctx context.Context, req *requests.AddMenuRequest, imageURL string) error
 	FindAll(ctx context.Context) ([]models.Menu, error)
 	FindByID(ctx context.Context, email string) (*models.Menu, error)
+	Delete(ctx context.Context, id string) error
 }

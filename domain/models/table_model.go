@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type Table struct {
@@ -17,4 +18,5 @@ type Table struct {
 	Orders      []Order    `json:"orders" gorm:"foreignKey:TableID"`
 	CreatedAt   time.Time  `json:"createdAt"`
 	UpdatedAt   time.Time  `json:"updatedAt"`
+	DeletedAt   gorm.DeletedAt
 }

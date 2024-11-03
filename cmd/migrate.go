@@ -17,7 +17,7 @@ func main() {
 		&models.Table{},
 		&models.Category{},
 		&models.Menu{},
-		&models.BuffetPack{},
+		&models.Setting{},
 		&models.Invoice{},
 		&models.Order{},
 		&models.OrderItem{},

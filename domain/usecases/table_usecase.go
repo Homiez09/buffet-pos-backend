@@ -14,6 +14,8 @@ type TableUseCase interface {
 	AddTable(ctx context.Context, req *requests.AddTableRequest) error
 	FindAllTables(ctx context.Context) ([]responses.TableDetail, error)
 	FindTableByID(ctx context.Context, tableID string) (*responses.TableDetail, error)
+	EditTable(ctx context.Context, req *requests.EditTableRequest) error
+	DeleteTable(ctx context.Context, tableID string) error
 }
 
 type tableService struct {
@@ -85,4 +87,26 @@ func (t *tableService) FindTableByID(ctx context.Context, tableID string) (*resp
 			UpdatedAt:   table.UpdatedAt,
 		},
 	}, nil
+}
+
+func (t *tableService) EditTable(ctx context.Context, req *requests.EditTableRequest) error {
+	table, err := t.tableRepo.FindByID(ctx, req.ID)
+	if err != nil {
+		return err
+	}
+	if table == nil {
+		return exceptions.ErrTableNotFound
+	}
+	return t.tableRepo.Edit(ctx, req)
+}
+
+func (t *tableService) DeleteTable(ctx context.Context, tableID string) error {
+	table, err := t.tableRepo.FindByID(ctx, tableID)
+	if err != nil {
+		return err
+	}
+	if table == nil {
+		return exceptions.ErrTableNotFound
+	}
+	return t.tableRepo.Delete(ctx, tableID)
 }

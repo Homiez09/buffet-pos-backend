@@ -14,6 +14,7 @@ type CategoryUseCase interface {
 	AddCategory(ctx context.Context, req *requests.AddCategoryRequest) error
 	FindAllCategories(ctx context.Context) ([]responses.CategoryDetail, error)
 	FindCategoryByID(ctx context.Context, categoryID string) (*responses.CategoryDetail, error)
+	DeleteCategory(ctx context.Context, categoryID string) error
 }
 
 type CategoryService struct {
@@ -78,4 +79,15 @@ func (c *CategoryService) FindCategoryByID(ctx context.Context, categoryID strin
 			UpdatedAt: category.UpdatedAt,
 		},
 	}, nil
+}
+
+func (c *CategoryService) DeleteCategory(ctx context.Context, categoryID string) error {
+	category, err := c.categoryRepo.FindByID(ctx, categoryID)
+	if err != nil {
+		return err
+	}
+	if category == nil {
+		return exceptions.ErrCategoryNotFound
+	}
+	return c.categoryRepo.Delete(ctx, categoryID)
 }

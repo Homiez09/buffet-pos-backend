@@ -12,4 +12,5 @@ type CategoryRepository interface {
 	FindAll(ctx context.Context) ([]models.Category, error)
 	FindByID(ctx context.Context, id string) (*models.Category, error)
 	FindByName(ctx context.Context, name string) (*models.Category, error)
+	Delete(ctx context.Context, id string) error
 }
