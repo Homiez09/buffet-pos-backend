@@ -45,6 +45,10 @@ func main() {
 	categoryService := usecases.NewCategoryService(categoryRepo, cfg)
 	categoryHandler := rest.NewCategoryHandler(categoryService)
 
+	menuRepo := gorm.NewMenuGormRepository(db)
+	menuService := usecases.NewMenuService(menuRepo, cfg, cld)
+	menuHandler := rest.NewMenuHandler(menuService)
+
 	app.Use(cors.New())
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
@@ -66,5 +70,6 @@ func main() {
 	manage.Get("/categories/:id", categoryHandler.FindCategoryByID)
 	manage.Post("/categories", categoryHandler.AddCategory)
 
+	manage.Get("/get-all-menu", menuHandler.FindAll)
 	app.Listen(":3000")
 }
