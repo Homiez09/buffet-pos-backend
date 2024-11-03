@@ -1,6 +1,10 @@
 package models
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Menu struct {
 	ID          uuid.UUID   `json:"id" gorm:"primaryKey;type:uuid"`
@@ -10,4 +14,5 @@ type Menu struct {
 	ImageURL    *string     `json:"imageUrl" gorm:"type:varchar(255)"`
 	IsAvailable bool        `json:"isAvailable" gorm:"type:boolean"`
 	OrderItems  []OrderItem `json:"orderItems" gorm:"foreignKey:MenuID"`
+	DeletedAt   *time.Time  `json:"deletedAt"`
 }
