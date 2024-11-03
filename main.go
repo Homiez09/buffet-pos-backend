@@ -9,6 +9,7 @@ import (
 	"github.com/cs471-buffetpos/buffet-pos-backend/internal/adapters/middleware"
 	"github.com/cs471-buffetpos/buffet-pos-backend/internal/adapters/rest"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/swagger"
 
 	_ "github.com/cs471-buffetpos/buffet-pos-backend/docs"
@@ -34,6 +35,8 @@ func main() {
 	categoryRepo := gorm.NewCategoryGormRepository(db)
 	categoryService := usecases.NewCategoryService(categoryRepo, cfg)
 	categoryHandler := rest.NewCategoryHandler(categoryService)
+
+	app.Use(cors.New())
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
