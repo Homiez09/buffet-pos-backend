@@ -12,6 +12,7 @@ type MenuHandler interface {
 	Create(c *fiber.Ctx) error
 	FindAll(c *fiber.Ctx) error
 	FindByID(c *fiber.Ctx) error
+	Delete(c *fiber.Ctx) error
 }
 
 type menuHandler struct {
@@ -136,4 +137,39 @@ func (m *menuHandler) FindByID(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)
+}
+
+// Delete Menu
+// @Summary Delete Menu
+// @Description Delete menu by ID.
+// @Tags Manage
+// @Accept json
+// @Produce json
+// @Param id path string true "Menu ID"
+// @Success 200 {object} responses.SuccessResponse
+// @Router /manage/menus/{id} [delete]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
+func (m *menuHandler) Delete(c *fiber.Ctx) error {
+	id, err := utils.ValidateUUID(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid UUID",
+		})
+	}
+	if err := m.service.DeleteMenu(c.Context(), *id); err != nil {
+		switch err {
+		case exceptions.ErrMenuNotFound:
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Menu not found",
+			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Delete Menu successfully",
+	})
 }

@@ -16,6 +16,7 @@ type MenuUseCase interface {
 	Create(ctx context.Context, req *requests.AddMenuRequest, file multipart.File) error
 	FindAll(ctx context.Context) ([]responses.MenuDetail, error)
 	FindByID(ctx context.Context, email string) (*responses.MenuDetail, error)
+	DeleteMenu(ctx context.Context, id string) error
 }
 
 type menuService struct {
@@ -82,4 +83,17 @@ func (m *menuService) FindByID(ctx context.Context, email string) (*responses.Me
 			IsAvailable: menu.IsAvailable,
 		},
 	}, nil
+}
+
+func (m *menuService) DeleteMenu(ctx context.Context, id string) error {
+	menu, err := m.menuRepo.FindByID(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	if menu == nil {
+		return exceptions.ErrMenuNotFound
+	}
+
+	return m.menuRepo.Delete(ctx, id)
 }

@@ -12,6 +12,7 @@ type CategoryHandler interface {
 	AddCategory(c *fiber.Ctx) error
 	FindAllCategories(c *fiber.Ctx) error
 	FindCategoryByID(c *fiber.Ctx) error
+	DeleteCategory(c *fiber.Ctx) error
 }
 
 type categoryHandler struct {
@@ -119,4 +120,39 @@ func (ct *categoryHandler) FindCategoryByID(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(category)
+}
+
+// Delete Category
+// @Summary Delete Category
+// @Description Delete category by ID.
+// @Tags Manage
+// @Accept json
+// @Produce json
+// @Param id path string true "Category ID"
+// @Success 200 {object} responses.SuccessResponse
+// @Router /manage/categories/{id} [delete]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
+func (ct *categoryHandler) DeleteCategory(c *fiber.Ctx) error {
+	id, err := utils.ValidateUUID(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid UUID",
+		})
+	}
+	if err := ct.service.DeleteCategory(c.Context(), *id); err != nil {
+		switch err {
+		case exceptions.ErrCategoryNotFound:
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"error": "Category not found",
+			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Category deleted successfully",
+	})
 }

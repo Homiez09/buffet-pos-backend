@@ -70,3 +70,12 @@ func (t *CategoryGormRepository) FindByName(ctx context.Context, categoryName st
 	}
 	return &category, nil
 }
+
+func (t *CategoryGormRepository) Delete(ctx context.Context, categoryID string) error {
+	result := t.DB.Where("id = ?", categoryID).Delete(&models.Category{})
+	if result.Error != nil {
+		return result.Error
+	}
+	result = t.DB.Model(&models.Menu{}).Where("category_id = ?", categoryID).Update("category_id", nil)
+	return result.Error
+}

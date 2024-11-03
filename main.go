@@ -65,10 +65,12 @@ func main() {
 	manage.Get("/categories", categoryHandler.FindAllCategories)
 	manage.Get("/categories/:id", categoryHandler.FindCategoryByID)
 	manage.Post("/categories", categoryHandler.AddCategory)
+	manage.Delete("/categories/:id", categoryHandler.DeleteCategory)
 
 	manage.Get("/menus", menuHandler.FindAll)
 	manage.Get("/menus/:id", menuHandler.FindByID)
 	manage.Post("/menus", menuHandler.Create)
+	manage.Delete("/menus/:id", menuHandler.Delete)
 
 	app.Listen(":3000")
 }
