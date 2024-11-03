@@ -70,6 +70,8 @@ func main() {
 	manage.Get("/categories/:id", categoryHandler.FindCategoryByID)
 	manage.Post("/categories", categoryHandler.AddCategory)
 
-	manage.Get("/get-all-menu", menuHandler.FindAll)
+	manage.Get("/menus", menuHandler.FindAll)
+	manage.Get("/menus/:id", menuHandler.FindByID)
+
 	app.Listen(":3000")
 }

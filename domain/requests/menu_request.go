@@ -10,3 +10,7 @@ type AddMenuRequest struct {
 	Price       float64        `json:"price" validate:"required"`
 	Image       multipart.File `json:"image" validate:"required"`
 }
+
+type MenuFindByIDRequest struct {
+	Name string `json:"email"`
+}
