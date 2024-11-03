@@ -37,6 +37,9 @@ func NewConfig() *Config {
 	viper.BindEnv("DB_PASSWORD")
 	viper.BindEnv("DB_PORT")
 	viper.BindEnv("JWT_SECRET")
+	viper.BindEnv("CLOUDINARY_CLOUD_NAME")
+	viper.BindEnv("CLOUDINARY_API_KEY")
+	viper.BindEnv("CLOUDINARY_API_SECRET")
 
 	if err := viper.Unmarshal(config); err != nil {
 		log.Fatalln("❌ Unable to decode into struct", err)
