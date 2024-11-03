@@ -13,4 +13,5 @@ type TableRepository interface {
 	FindAll(ctx context.Context) ([]models.Table, error)
 	FindByID(ctx context.Context, email string) (*models.Table, error)
 	FindByName(ctx context.Context, name string) (*models.Table, error)
+	Delete(ctx context.Context, id string) error
 }

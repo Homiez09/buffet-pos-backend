@@ -13,6 +13,7 @@ type TableHandler interface {
 	FindAllTables(c *fiber.Ctx) error
 	FindTableByID(c *fiber.Ctx) error
 	Edit(c *fiber.Ctx) error
+	Delete(c *fiber.Ctx) error
 }
 
 type tableHandler struct {
@@ -159,5 +160,40 @@ func (t *tableHandler) Edit(c *fiber.Ctx) error {
 	}
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Table edited successfully",
+	})
+}
+
+// Delete Table
+// @Summary Delete Table
+// @Description Delete Table by ID.
+// @Tags Manage
+// @Accept json
+// @Produce json
+// @Param id path string true "Table ID"
+// @Success 200 {object} responses.SuccessResponse
+// @Router /manage/tables/{id} [delete]
+// @Security Api
+// @param Authorization header string true "Authorization"
+func (t *tableHandler) Delete(c *fiber.Ctx) error {
+	id, err := utils.ValidateUUID(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid UUID",
+		})
+	}
+	if err := t.service.DeleteTable(c.Context(), *id); err != nil {
+		switch err {
+		case exceptions.ErrTableNotFound:
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Table not found",
+			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Table deleted successfully",
 	})
 }

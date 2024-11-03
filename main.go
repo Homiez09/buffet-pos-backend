@@ -60,6 +60,7 @@ func main() {
 	manage.Get("/tables/:id", tableHandler.FindTableByID)
 	manage.Post("/tables", tableHandler.AddTable)
 	manage.Put("/tables", tableHandler.Edit)
+	manage.Delete("/tables/:id", tableHandler.Delete)
 
 	manage.Get("/categories", categoryHandler.FindAllCategories)
 	manage.Get("/categories/:id", categoryHandler.FindCategoryByID)
