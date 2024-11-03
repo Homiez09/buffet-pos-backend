@@ -24,20 +24,39 @@ func NewMenuHandler(service usecases.MenuUseCase) MenuHandler {
 	}
 }
 
+// Add Menu
+// @Summary Add Menu
+// @Description Add a new menu.
+// @Tags Manage
+// @Accept mpfd
+// @Param request formData requests.AddMenuRequest true "Add Menu request"
+// @Param image formData file true "Menu Image"
+// @Success 200 {object} responses.SuccessResponse
+// @Router /manage/menus [post]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func (m *menuHandler) Create(c *fiber.Ctx) error {
+	var req requests.AddMenuRequest
+	if err := utils.PopulateStructFromForm(c, &req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Failed to parse form data",
+		})
+	}
 
-	var req *requests.AddMenuRequest
-	if err := c.BodyParser(&req); err != nil {
-		c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	if validationErr := utils.ValidateStruct(req); validationErr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": validationErr.Message,
+		})
+	}
+
+	file, err := utils.OpenFile(c)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": err.Error(),
 		})
 	}
 
-	if err := utils.ValidateStruct(req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err)
-	}
-
-	if err := m.service.Create(c.Context(), req); err != nil {
+	if err := m.service.Create(c.Context(), &req, file); err != nil {
 		switch err {
 		case exceptions.ErrDuplicatedMenuName:
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -55,6 +74,16 @@ func (m *menuHandler) Create(c *fiber.Ctx) error {
 	})
 }
 
+// Find All Menus
+// @Summary Find All Menus
+// @Description Find all menus.
+// @Tags Manage
+// @Accept json
+// @Produce json
+// @Success 200 {array} responses.MenuDetail
+// @Router /manage/menus [get]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func (m *menuHandler) FindAll(c *fiber.Ctx) error {
 	res, err := m.service.FindAll(c.Context())
 	if err != nil {
@@ -76,19 +105,26 @@ func (m *menuHandler) FindAll(c *fiber.Ctx) error {
 	})
 }
 
+// Find Menu By ID
+// @Summary Find Menu By ID
+// @Description Find menu by ID.
+// @Tags Manage
+// @Accept json
+// @Produce json
+// @Param id path string true "Menu ID"
+// @Success 200 {object} responses.MenuDetail
+// @Router /manage/menus/{id} [get]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func (m *menuHandler) FindByID(c *fiber.Ctx) error {
-
-	var req *requests.MenuFindByIDRequest
-	if err := c.BodyParser(&req); err != nil {
-		c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": err.Error(),
+	id, err := utils.ValidateUUID(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid UUID",
 		})
 	}
 
-	if err := utils.ValidateStruct(req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err)
-	}
-	res, err := m.service.FindByID(c.Context(), req.ID)
+	res, err := m.service.FindByID(c.Context(), *id)
 	if err != nil {
 		switch err {
 		case exceptions.ErrMenuNotFound:
@@ -102,8 +138,5 @@ func (m *menuHandler) FindByID(c *fiber.Ctx) error {
 		}
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Menu find successfully",
-		"data":    res,
-	})
+	return c.Status(fiber.StatusOK).JSON(res)
 }

@@ -1,10 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"log"
-
-	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cs471-buffetpos/buffet-pos-backend/bootstrap"
 	"github.com/cs471-buffetpos/buffet-pos-backend/configs"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
@@ -12,6 +8,7 @@ import (
 	"github.com/cs471-buffetpos/buffet-pos-backend/internal/adapters/gorm"
 	"github.com/cs471-buffetpos/buffet-pos-backend/internal/adapters/middleware"
 	"github.com/cs471-buffetpos/buffet-pos-backend/internal/adapters/rest"
+	"github.com/cs471-buffetpos/buffet-pos-backend/internal/infrastructure/cloudinary"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/swagger"
@@ -25,13 +22,10 @@ import (
 func main() {
 	app := fiber.New()
 	cfg := configs.NewConfig()
-	cld, err := cloudinary.NewFromURL("cloudinary://" + cfg.CloudinaryApiKey + ":" + cfg.CloudinaryApiSecret + "@" + cfg.CloudinaryCloudName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(cld)
 
 	db := bootstrap.NewDB(cfg)
+
+	cld := cloudinary.NewCloudinaryStorageService(cfg)
 
 	userRepo := gorm.NewUserGormRepository(db)
 	userService := usecases.NewUserService(userRepo, cfg)
@@ -72,6 +66,7 @@ func main() {
 
 	manage.Get("/menus", menuHandler.FindAll)
 	manage.Get("/menus/:id", menuHandler.FindByID)
+	manage.Post("/menus", menuHandler.Create)
 
 	app.Listen(":3000")
 }
