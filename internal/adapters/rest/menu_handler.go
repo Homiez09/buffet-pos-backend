@@ -99,10 +99,7 @@ func (m *menuHandler) FindAll(c *fiber.Ctx) error {
 		}
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Get All Menus",
-		"data":    res,
-	})
+	return c.Status(fiber.StatusOK).JSON(res)
 }
 
 // Find Menu By ID
