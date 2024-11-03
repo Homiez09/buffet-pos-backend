@@ -4,7 +4,8 @@
 
 - **[GoFiber](https://gofiber.io/)** - An Express-inspired web framework for building fast and scalable applications in Go.
 - **[Gorm](https://gorm.io/)** - An ORM library for Go, making it easy to work with databases through object relational mapping.
-- **[PostgreSQL](https://www.postgresql.org/)** - A powerful, open source object-relational database system. **[Docker](https://www.docker.com/)** - A platform for developing, shipping, and running applications in containers.
+- **[PostgreSQL](https://www.postgresql.org/)** - A powerful, open source object-relational database system.
+- **[Docker](https://www.docker.com/)** - A platform for developing, shipping, and running applications in containers.
 
 ## Setup Instructions
 
