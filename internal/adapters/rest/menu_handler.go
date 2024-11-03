@@ -9,6 +9,7 @@ import (
 )
 
 type MenuHandler interface {
+	Create(c *fiber.Ctx) error
 	FindAll(c *fiber.Ctx) error
 	FindByID(c *fiber.Ctx) error
 }
@@ -21,6 +22,37 @@ func NewMenuHandler(service usecases.MenuUseCase) MenuHandler {
 	return &menuHandler{
 		service: service,
 	}
+}
+
+func (m *menuHandler) Create(c *fiber.Ctx) error {
+
+	var req *requests.AddMenuRequest
+	if err := c.BodyParser(&req); err != nil {
+		c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	if err := utils.ValidateStruct(req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(err)
+	}
+
+	if err := m.service.Create(c.Context(), req); err != nil {
+		switch err {
+		case exceptions.ErrDuplicatedMenuName:
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Menu name already exist",
+			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Create Menu successfully",
+	})
 }
 
 func (m *menuHandler) FindAll(c *fiber.Ctx) error {
