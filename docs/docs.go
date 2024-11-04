@@ -399,6 +399,138 @@ const docTemplate = `{
                 }
             }
         },
+        "/manage/invoices/cancel": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Cancel invoice.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manage"
+                ],
+                "summary": "Cancel Invoice",
+                "parameters": [
+                    {
+                        "description": "Update Invoice Status Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.UpdateInvoiceStatusRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/manage/invoices/set-paid": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Set invoice as paid.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manage"
+                ],
+                "summary": "Set Invoice Paid",
+                "parameters": [
+                    {
+                        "description": "Update Invoice Status Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.UpdateInvoiceStatusRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/manage/invoices/unpaid": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get all unpaid invoices.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manage"
+                ],
+                "summary": "Get All Unpaid",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.InvoiceDetail"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/manage/menus": {
             "get": {
                 "security": [
@@ -1254,6 +1386,17 @@ const docTemplate = `{
                 }
             }
         },
+        "requests.UpdateInvoiceStatusRequest": {
+            "type": "object",
+            "required": [
+                "invoice_id"
+            ],
+            "properties": {
+                "invoice_id": {
+                    "type": "string"
+                }
+            }
+        },
         "requests.UpdateOrderStatusRequest": {
             "type": "object",
             "required": [
@@ -1328,6 +1471,32 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.InvoiceDetail": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "isPaid": {
+                    "type": "boolean"
+                },
+                "peopleAmount": {
+                    "type": "integer"
+                },
+                "tableId": {
+                    "type": "string"
+                },
+                "totalPrice": {
+                    "type": "number"
                 },
                 "updatedAt": {
                     "type": "string"

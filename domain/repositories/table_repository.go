@@ -16,4 +16,5 @@ type TableRepository interface {
 	Delete(ctx context.Context, id string) error
 	FindByAccessCode(ctx context.Context, accessCode string) (*models.Table, error)
 	Assign(ctx context.Context, tableID string, accessCode string, qrCode string) error
+	SetAvailability(ctx context.Context, tableID string, availability bool) error
 }

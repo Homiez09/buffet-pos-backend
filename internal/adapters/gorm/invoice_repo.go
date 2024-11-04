@@ -18,6 +18,17 @@ func NewInvoiceGormRepository(db *gorm.DB) *InvoiceGormRepository {
 	}
 }
 
+func (i *InvoiceGormRepository) FindByID(ctx context.Context, invoiceID string) (*models.Invoice, error) {
+	invoiceIDParse, err := uuid.Parse(invoiceID)
+	if err != nil {
+		return nil, err
+	}
+	invoice := &models.Invoice{}
+	result := i.DB.First(invoice, invoiceIDParse)
+
+	return invoice, result.Error
+}
+
 func (i *InvoiceGormRepository) Create(ctx context.Context, tableID string, totalPrice float64, peopleAmount int) error {
 	id, _ := uuid.NewV7()
 
@@ -44,4 +55,20 @@ func (i *InvoiceGormRepository) SetPaid(ctx context.Context, invoiceID string) e
 	}
 	result := i.DB.Model(&models.Invoice{}).Where("id = ?", invoiceIDParse).Update("is_paid", true)
 	return result.Error
+}
+
+func (i *InvoiceGormRepository) Cancel(ctx context.Context, invoiceID string) error {
+	invoiceIDParse, err := uuid.Parse(invoiceID)
+	if err != nil {
+		return err
+	}
+
+	result := i.DB.Delete(&models.Invoice{}, invoiceIDParse)
+	return result.Error
+}
+
+func (i *InvoiceGormRepository) GetAllUnpaid(ctx context.Context) ([]models.Invoice, error) {
+	var invoices []models.Invoice
+	result := i.DB.Where("is_paid = ?", false).Find(&invoices)
+	return invoices, result.Error
 }

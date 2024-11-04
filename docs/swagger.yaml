@@ -81,6 +81,13 @@ definitions:
     - menu_id
     - quantity
     type: object
+  requests.UpdateInvoiceStatusRequest:
+    properties:
+      invoice_id:
+        type: string
+    required:
+    - invoice_id
+    type: object
   requests.UpdateOrderStatusRequest:
     properties:
       status:
@@ -131,6 +138,23 @@ definitions:
         type: string
       name:
         type: string
+      updatedAt:
+        type: string
+    type: object
+  responses.InvoiceDetail:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      isPaid:
+        type: boolean
+      peopleAmount:
+        type: integer
+      tableId:
+        type: string
+      totalPrice:
+        type: number
       updatedAt:
         type: string
     type: object
@@ -467,6 +491,89 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Find Category By ID
+      tags:
+      - Manage
+  /manage/invoices/cancel:
+    delete:
+      consumes:
+      - application/json
+      description: Cancel invoice.
+      parameters:
+      - description: Update Invoice Status Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.UpdateInvoiceStatusRequest'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Cancel Invoice
+      tags:
+      - Manage
+  /manage/invoices/set-paid:
+    put:
+      consumes:
+      - application/json
+      description: Set invoice as paid.
+      parameters:
+      - description: Update Invoice Status Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.UpdateInvoiceStatusRequest'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Set Invoice Paid
+      tags:
+      - Manage
+  /manage/invoices/unpaid:
+    get:
+      consumes:
+      - application/json
+      description: Get all unpaid invoices.
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/responses.InvoiceDetail'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Unpaid
       tags:
       - Manage
   /manage/menus:
