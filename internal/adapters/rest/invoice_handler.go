@@ -105,15 +105,19 @@ func (i *invoiceHandler) SetInvoicePaid(c *fiber.Ctx) error {
 // @Tags Manage
 // @Accept json
 // @Produce json
-// @Param request body requests.UpdateInvoiceStatusRequest true "Update Invoice Status Request"
+// @Param invoice_id path string true "Invoice ID"
 // @Success 200 {object} responses.SuccessResponse
-// @Router /manage/invoices/cancel [delete]
+// @Router /manage/invoices/{invoice_id} [delete]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (i *invoiceHandler) CancelInvoice(c *fiber.Ctx) error {
-	var req *requests.UpdateInvoiceStatusRequest
-	err := i.service.DeleteInvoice(c.Context(), req.InvoiceID)
+	id, err := utils.ValidateUUID(c.Params("invoice_id"))
 	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid UUID",
+		})
+	}
+	if err := i.service.DeleteInvoice(c.Context(), *id); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
 		})

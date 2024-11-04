@@ -561,18 +561,17 @@ paths:
       summary: Find Category By ID
       tags:
       - Manage
-  /manage/invoices/cancel:
+  /manage/invoices/{invoice_id}:
     delete:
       consumes:
       - application/json
       description: Cancel invoice.
       parameters:
-      - description: Update Invoice Status Request
-        in: body
-        name: request
+      - description: Invoice ID
+        in: path
+        name: invoice_id
         required: true
-        schema:
-          $ref: '#/definitions/requests.UpdateInvoiceStatusRequest'
+        type: string
       - description: Authorization
         in: header
         name: Authorization

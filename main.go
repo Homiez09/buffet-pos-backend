@@ -89,7 +89,7 @@ func main() {
 	manage.Get("/invoices/paid", invoiceHandler.GetAllPaidInvoices)
 	manage.Get("/invoices/unpaid", invoiceHandler.GetAllUnpaidInvoices)
 	manage.Put("/invoices/set-paid", invoiceHandler.SetInvoicePaid)
-	manage.Delete("/invoices/cancel", invoiceHandler.CancelInvoice)
+	manage.Delete("/invoices/:invoice_id", invoiceHandler.CancelInvoice)
 
 	manage.Get("/categories", categoryHandler.FindAllCategories)
 	manage.Get("/categories/:id", categoryHandler.FindCategoryByID)
