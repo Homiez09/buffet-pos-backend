@@ -64,6 +64,35 @@ func (m *MenuGormRepository) FindByID(ctx context.Context, menuID string) (*mode
 	return &menu, nil
 }
 
+func (m *MenuGormRepository) Edit(ctx context.Context, req *requests.EditMenuRequest, imageURL string) error {
+	var menu models.Menu
+	if err := m.DB.Where("id = ?", req.ID).First(&menu).Error; err != nil {
+		return err
+	}
+
+	categoryID, _ := uuid.Parse(req.CategoryID)
+	if categoryID == uuid.Nil && menu.CategoryID != nil {
+		categoryID = *menu.CategoryID
+	}
+
+	if req.Name != "" {
+		menu.Name = req.Name
+	}
+	if req.Description != "" {
+		menu.Description = &req.Description
+	}
+	if imageURL != "" {
+		menu.ImageURL = &imageURL
+	}
+	if req.CategoryID != "" {
+		menu.CategoryID = &categoryID
+	}
+	menu.IsAvailable = req.IsAvailable
+
+	result := m.DB.Save(&menu)
+	return result.Error
+}
+
 func (m *MenuGormRepository) Delete(ctx context.Context, menuID string) error {
 	result := m.DB.Where("id = ?", menuID).Delete(&models.Menu{})
 	return result.Error

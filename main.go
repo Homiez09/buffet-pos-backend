@@ -74,6 +74,7 @@ func main() {
 	manage.Get("/menus", menuHandler.FindAll)
 	manage.Get("/menus/:id", menuHandler.FindByID)
 	manage.Post("/menus", menuHandler.Create)
+	manage.Put("/menus", menuHandler.Edit)
 	manage.Delete("/menus/:id", menuHandler.Delete)
 
 	manage.Get("/settings/price-per-person", settingHandler.GetPricePerPerson)

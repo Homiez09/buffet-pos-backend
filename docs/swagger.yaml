@@ -356,6 +356,46 @@ paths:
       summary: Add Menu
       tags:
       - Manage
+    put:
+      consumes:
+      - multipart/form-data
+      description: Edit menu by ID.
+      parameters:
+      - in: formData
+        name: categoryId
+        type: string
+      - in: formData
+        name: description
+        type: string
+      - in: formData
+        name: id
+        required: true
+        type: string
+      - in: formData
+        name: isAvailable
+        type: boolean
+      - in: formData
+        name: name
+        type: string
+      - description: Menu Image
+        in: formData
+        name: image
+        type: file
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Edit Menu
+      tags:
+      - Manage
   /manage/menus/{id}:
     delete:
       consumes:
