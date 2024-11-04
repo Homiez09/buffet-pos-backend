@@ -72,3 +72,8 @@ func (o *OrderGormRepository) GetOrderHistory(ctx context.Context, tableID strin
 	}
 	return orders, nil
 }
+
+func (o *OrderGormRepository) SetAllPreparingToServed(ctx context.Context, tableID string) error {
+	result := o.DB.Model(&models.Order{}).Where("table_id = ? AND status = ?", tableID, models.PREPARING).Update("status", models.SERVED)
+	return result.Error
+}
