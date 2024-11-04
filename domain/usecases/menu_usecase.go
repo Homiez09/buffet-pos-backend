@@ -35,6 +35,14 @@ func NewMenuService(menuRepo repositories.MenuRepository, config *configs.Config
 }
 
 func (m *menuService) Create(ctx context.Context, req *requests.AddMenuRequest, file multipart.File) error {
+	menu, err := m.menuRepo.FindByName(ctx, req.Name)
+	if err != nil {
+		return err
+	}
+	if menu != nil {
+		return exceptions.ErrDuplicatedMenuName
+	}
+
 	imageURL, err := m.storageService.UploadFile(ctx, file)
 	if err != nil {
 		return err

@@ -97,3 +97,15 @@ func (m *MenuGormRepository) Delete(ctx context.Context, menuID string) error {
 	result := m.DB.Where("id = ?", menuID).Delete(&models.Menu{})
 	return result.Error
 }
+
+func (m *MenuGormRepository) FindByName(ctx context.Context, name string) (*models.Menu, error) {
+	var menu models.Menu
+	result := m.DB.Where("name = ?", name).First(&menu)
+	if result.Error == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &menu, nil
+}
