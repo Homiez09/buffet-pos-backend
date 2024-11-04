@@ -36,7 +36,7 @@ func NewOrderHandler(service usecases.OrderUseCase) OrderHandler {
 // @param Authorization header string true "Authorization"
 func (h *orderHandler) GetOrdersByStatus(c *fiber.Ctx) error {
 	status := c.Params("status")
-	orders, err := h.service.GetOrdersByStatus(status)
+	orders, err := h.service.GetOrdersByStatus(c.Context(), status)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
@@ -58,7 +58,7 @@ func (h *orderHandler) GetOrdersByStatus(c *fiber.Ctx) error {
 // @param Authorization header string true "Authorization"
 func (h *orderHandler) GetOrdersByTableID(c *fiber.Ctx) error {
 	tableID := c.Params("tableID")
-	orders, err := h.service.GetOrdersByTableID(tableID)
+	orders, err := h.service.GetOrdersByTableID(c.Context(), tableID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
@@ -85,7 +85,7 @@ func (h *orderHandler) UpdateOrderStatus(c *fiber.Ctx) error {
 			"error": "Failed to parse request body",
 		})
 	}
-	if err := h.service.UpdateOrderStatus(req.OrderID, req.Status); err != nil {
+	if err := h.service.UpdateOrderStatus(c.Context(), req.OrderID, req.Status); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
 		})
@@ -112,7 +112,7 @@ func (h *orderHandler) CreateOrder(c *fiber.Ctx) error {
 			"error": "Failed to parse request body",
 		})
 	}
-	if err := h.service.CreateOrder(&req); err != nil {
+	if err := h.service.CreateOrder(c.Context(), &req); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
 		})

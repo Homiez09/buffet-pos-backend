@@ -1,6 +1,8 @@
 package gorm
 
 import (
+	"context"
+
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
 	"github.com/google/uuid"
@@ -17,7 +19,7 @@ func NewOrderGormRepository(db *gorm.DB) *OrderGormRepository {
 	}
 }
 
-func (o *OrderGormRepository) GetOrdersByStatus(status string) ([]*models.Order, error) {
+func (o *OrderGormRepository) GetOrdersByStatus(ctx context.Context, status string) ([]*models.Order, error) {
 	var orders []*models.Order
 	result := o.DB.Where("status = ?", status).Find(&orders)
 	if result.Error != nil {
@@ -26,7 +28,7 @@ func (o *OrderGormRepository) GetOrdersByStatus(status string) ([]*models.Order,
 	return orders, nil
 }
 
-func (o *OrderGormRepository) GetOrdersByTableID(tableID string) ([]*models.Order, error) {
+func (o *OrderGormRepository) GetOrdersByTableID(ctx context.Context, tableID string) ([]*models.Order, error) {
 	var orders []*models.Order
 	result := o.DB.Where("table_id = ?", tableID).Find(&orders)
 	if result.Error != nil {
@@ -35,18 +37,21 @@ func (o *OrderGormRepository) GetOrdersByTableID(tableID string) ([]*models.Orde
 	return orders, nil
 }
 
-func (o *OrderGormRepository) UpdateOrderStatus(orderID string, status string) error {
+func (o *OrderGormRepository) UpdateOrderStatus(ctx context.Context, orderID string, status string) error {
 	result := o.DB.Model(&models.Order{}).Where("id = ?", orderID).Update("status", status)
 	return result.Error
 }
 
-func (o *OrderGormRepository) CreateOrder(order *requests.UserAddOrderRequest) (*models.Order, error) {
+func (o *OrderGormRepository) CreateOrder(ctx context.Context, order *requests.UserAddOrderRequest) (*models.Order, error) {
 	tableID, err := uuid.Parse(order.TableID)
 	if err != nil {
 		return nil, err
 	}
 
+	id := uuid.New()
+
 	newOrder := &models.Order{
+		ID:      id,
 		TableID: tableID,
 		Status:  models.PREPARING,
 	}

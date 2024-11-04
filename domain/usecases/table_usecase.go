@@ -8,6 +8,7 @@ import (
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/repositories"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/responses"
+	"github.com/google/uuid"
 )
 
 type TableUseCase interface {
@@ -17,6 +18,7 @@ type TableUseCase interface {
 	EditTable(ctx context.Context, req *requests.EditTableRequest) error
 	DeleteTable(ctx context.Context, tableID string) error
 	FindByAccessCode(ctx context.Context, accessCode string) (*responses.TableDetail, error)
+	AssignTable(ctx context.Context, req *requests.AssignTableRequest) (*responses.TableDetail, error)
 }
 
 type tableService struct {
@@ -120,6 +122,42 @@ func (t *tableService) FindByAccessCode(ctx context.Context, accessCode string) 
 	if table == nil {
 		return nil, exceptions.ErrTableNotFound
 	}
+	return &responses.TableDetail{
+		BaseTable: responses.BaseTable{
+			ID:          table.ID,
+			TableName:   table.TableName,
+			IsAvailable: table.IsAvailable,
+			QRCode:      table.QRCode,
+			AccessCode:  table.AccessCode,
+			CreatedAt:   table.CreatedAt,
+			UpdatedAt:   table.UpdatedAt,
+		},
+	}, nil
+}
+
+func (t *tableService) AssignTable(ctx context.Context, req *requests.AssignTableRequest) (*responses.TableDetail, error) {
+	table, err := t.tableRepo.FindByID(ctx, req.ID)
+	if err != nil {
+		return nil, err
+	}
+	if table == nil {
+		return nil, exceptions.ErrTableNotFound
+	}
+	tableID := table.ID.String()
+
+	accessCode, _ := uuid.NewV7()
+	accessCodeStr := accessCode.String()
+
+	qrcode := t.config.FrontendURL + "/user/" + accessCode.String()
+
+	table.IsAvailable = false
+	table.QRCode = &qrcode
+	table.AccessCode = &accessCodeStr
+
+	if err := t.tableRepo.Assign(ctx, tableID, accessCode.String(), qrcode); err != nil {
+		return nil, err
+	}
+
 	return &responses.TableDetail{
 		BaseTable: responses.BaseTable{
 			ID:          table.ID,

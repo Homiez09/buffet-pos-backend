@@ -2,6 +2,7 @@ package gorm
 
 import (
 	"context"
+	"time"
 
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
@@ -110,4 +111,22 @@ func (t *TableGormRepository) FindByAccessCode(ctx context.Context, accessCode s
 		return nil, result.Error
 	}
 	return &table, nil
+}
+
+func (t *TableGormRepository) Assign(ctx context.Context, tableID string, accessCode string, qrCode string) error {
+	table, err := t.FindByID(ctx, tableID)
+	if err != nil {
+		return err
+	}
+	if table == nil {
+		return nil
+	}
+
+	now := time.Now()
+
+	table.AccessCode = &accessCode
+	table.QRCode = &qrCode
+	table.EntryAt = &now
+	result := t.DB.Save(table)
+	return result.Error
 }
