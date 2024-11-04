@@ -1,6 +1,8 @@
 package gorm
 
 import (
+	"context"
+
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
 	"gorm.io/gorm"
 )
@@ -15,7 +17,7 @@ func NewSettingGormRepository(db *gorm.DB) *SettingGormRepository {
 	}
 }
 
-func (s *SettingGormRepository) GetSetting(key string) (*models.Setting, error) {
+func (s *SettingGormRepository) GetSetting(ctx context.Context, key string) (*models.Setting, error) {
 	var setting models.Setting
 	result := s.DB.Where("key = ?", key).First(&setting)
 
@@ -30,12 +32,12 @@ func (s *SettingGormRepository) GetSetting(key string) (*models.Setting, error) 
 	return &setting, nil
 }
 
-func (s *SettingGormRepository) UpdateSetting(key string, value string) error {
+func (s *SettingGormRepository) UpdateSetting(ctx context.Context, key string, value string) error {
 	result := s.DB.Model(&models.Setting{}).Where("key = ?", key).Update("value", value)
 	return result.Error
 }
 
-func (s *SettingGormRepository) AddSetting(key string, value string) error {
+func (s *SettingGormRepository) AddSetting(ctx context.Context, key string, value string) error {
 	setting := &models.Setting{
 		Key:   key,
 		Value: value,

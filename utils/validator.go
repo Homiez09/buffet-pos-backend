@@ -95,3 +95,10 @@ func ValidateUUID(input string) (*string, error) {
 	}
 	return &input, nil
 }
+
+func ValidatePrice(price string) error {
+	if _, err := strconv.ParseFloat(price, 64); err != nil {
+		return errors.New("invalid price format")
+	}
+	return nil
+}
