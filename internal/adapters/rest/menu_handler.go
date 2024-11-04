@@ -12,6 +12,7 @@ type MenuHandler interface {
 	Create(c *fiber.Ctx) error
 	FindAll(c *fiber.Ctx) error
 	FindByID(c *fiber.Ctx) error
+	Edit(c *fiber.Ctx) error
 	Delete(c *fiber.Ctx) error
 }
 
@@ -171,5 +172,53 @@ func (m *menuHandler) Delete(c *fiber.Ctx) error {
 	}
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Delete Menu successfully",
+	})
+}
+
+// Edit Menu
+// @Summary Edit Menu
+// @Description Edit menu by ID.
+// @Tags Manage
+// @Accept mpfd
+// @Param request formData requests.EditMenuRequest true "Edit Menu request"
+// @Param image formData file false "Menu Image"
+// @Success 200 {object} responses.SuccessResponse
+// @Router /manage/menus [put]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
+func (m *menuHandler) Edit(c *fiber.Ctx) error {
+	var req requests.EditMenuRequest
+	if err := utils.PopulateStructFromForm(c, &req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Failed to parse form data",
+		})
+	}
+	if validationErr := utils.ValidateStruct(req); validationErr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": validationErr.Message,
+		})
+	}
+
+	file, err := utils.OpenFile(c)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	if err := m.service.EditMenu(c.Context(), &req, req.ID, file); err != nil {
+		switch err {
+		case exceptions.ErrMenuNotFound:
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Menu not found",
+			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Edit Menu successfully",
 	})
 }

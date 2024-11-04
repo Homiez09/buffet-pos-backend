@@ -16,6 +16,7 @@ type MenuUseCase interface {
 	Create(ctx context.Context, req *requests.AddMenuRequest, file multipart.File) error
 	FindAll(ctx context.Context) ([]responses.MenuDetail, error)
 	FindByID(ctx context.Context, email string) (*responses.MenuDetail, error)
+	EditMenu(ctx context.Context, req *requests.EditMenuRequest, id string, file multipart.File) error
 	DeleteMenu(ctx context.Context, id string) error
 }
 
@@ -53,9 +54,9 @@ func (m *menuService) FindAll(ctx context.Context) ([]responses.MenuDetail, erro
 			BaseMenu: responses.BaseMenu{
 				ID:          menu.ID,
 				Name:        menu.Name,
-				Description: *menu.Description,
-				CategoryID:  *menu.CategoryID,
-				ImageURL:    *menu.ImageURL,
+				Description: menu.Description,
+				CategoryID:  menu.CategoryID,
+				ImageURL:    menu.ImageURL,
 				IsAvailable: menu.IsAvailable,
 			},
 		})
@@ -77,12 +78,31 @@ func (m *menuService) FindByID(ctx context.Context, email string) (*responses.Me
 		BaseMenu: responses.BaseMenu{
 			ID:          menu.ID,
 			Name:        menu.Name,
-			Description: *menu.Description,
-			CategoryID:  *menu.CategoryID,
-			ImageURL:    *menu.ImageURL,
+			Description: menu.Description,
+			CategoryID:  menu.CategoryID,
+			ImageURL:    menu.ImageURL,
 			IsAvailable: menu.IsAvailable,
 		},
 	}, nil
+}
+
+func (m *menuService) EditMenu(ctx context.Context, req *requests.EditMenuRequest, id string, file multipart.File) error {
+	menu, err := m.menuRepo.FindByID(ctx, id)
+	if err != nil {
+		return err
+	}
+	if menu == nil {
+		return exceptions.ErrMenuNotFound
+	}
+	if file == nil {
+		return m.menuRepo.Edit(ctx, req, *menu.ImageURL)
+	}
+
+	imageURL, err := m.storageService.UploadFile(ctx, file)
+	if err != nil {
+		return err
+	}
+	return m.menuRepo.Edit(ctx, req, imageURL)
 }
 
 func (m *menuService) DeleteMenu(ctx context.Context, id string) error {
