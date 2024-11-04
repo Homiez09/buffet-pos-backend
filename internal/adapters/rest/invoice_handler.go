@@ -2,6 +2,7 @@ package rest
 
 import (
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
+	"github.com/cs471-buffetpos/buffet-pos-backend/domain/responses"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/usecases"
 	"github.com/cs471-buffetpos/buffet-pos-backend/utils"
 	"github.com/gofiber/fiber/v2"
@@ -12,6 +13,7 @@ type InvoiceHandler interface {
 	GetAllPaidInvoices(c *fiber.Ctx) error
 	SetInvoicePaid(c *fiber.Ctx) error
 	CancelInvoice(c *fiber.Ctx) error
+	CustomerGetInvoice(c *fiber.Ctx) error
 }
 
 type invoiceHandler struct {
@@ -119,4 +121,24 @@ func (i *invoiceHandler) CancelInvoice(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "Invoice cancelled successfully",
 	})
+}
+
+// Customer Get Invoice
+// @Summary Get Invoice
+// @Description Get invoice by table ID.
+// @Tags Customer
+// @Accept json
+// @Produce json
+// @Success 200 {object} responses.InvoiceDetail
+// @Router /customer/invoices [get]
+// @param AccessCode header string true "Access Code"
+func (i *invoiceHandler) CustomerGetInvoice(c *fiber.Ctx) error {
+	claims, _ := c.Locals("table").(*responses.TableDetail)
+	invoice, err := i.service.CustomerGetInvoice(c.Context(), claims.ID.String())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+	return c.JSON(invoice)
 }

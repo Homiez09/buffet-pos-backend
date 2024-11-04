@@ -312,6 +312,27 @@ paths:
       summary: Get All Categories
       tags:
       - Customer
+  /customer/invoices:
+    get:
+      consumes:
+      - application/json
+      description: Get invoice by table ID.
+      parameters:
+      - description: Access Code
+        in: header
+        name: AccessCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.InvoiceDetail'
+      summary: Get Invoice
+      tags:
+      - Customer
   /customer/menus:
     get:
       consumes:

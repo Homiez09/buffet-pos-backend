@@ -13,6 +13,7 @@ type InvoiceUseCase interface {
 	GetAllPaidInvoices(ctx context.Context) ([]responses.InvoiceDetail, error)
 	DeleteInvoice(ctx context.Context, invoiceID string) error
 	SetPaidInvoice(ctx context.Context, invoiceID string) error
+	CustomerGetInvoice(ctx context.Context, tableID string) (responses.InvoiceDetail, error)
 }
 
 type InvoiceService struct {
@@ -110,4 +111,22 @@ func (i *InvoiceService) SetPaidInvoice(ctx context.Context, invoiceID string) e
 	}
 
 	return nil
+}
+
+func (i *InvoiceService) CustomerGetInvoice(ctx context.Context, tableID string) (responses.InvoiceDetail, error) {
+	invoice, err := i.invoiceRepo.GetByTableID(ctx, tableID)
+	if err != nil {
+		return responses.InvoiceDetail{}, err
+	}
+	return responses.InvoiceDetail{
+		BaseInvoice: responses.BaseInvoice{
+			ID:           invoice.ID,
+			PeopleAmount: invoice.PeopleAmount,
+			TotalPrice:   invoice.TotalPrice,
+			IsPaid:       invoice.IsPaid,
+			TableID:      invoice.TableID,
+			CreatedAt:    invoice.CreatedAt,
+			UpdatedAt:    invoice.UpdatedAt,
+		},
+	}, nil
 }
