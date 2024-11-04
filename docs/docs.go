@@ -1096,11 +1096,15 @@ const docTemplate = `{
         "requests.AssignTableRequest": {
             "type": "object",
             "required": [
-                "id"
+                "id",
+                "peopleAmount"
             ],
             "properties": {
                 "id": {
                     "type": "string"
+                },
+                "peopleAmount": {
+                    "type": "integer"
                 }
             }
         },

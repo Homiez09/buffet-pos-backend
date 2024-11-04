@@ -10,5 +10,6 @@ type EditTableRequest struct {
 }
 
 type AssignTableRequest struct {
-	ID string `json:"id" validate:"required"`
+	ID           string `json:"id" validate:"required"`
+	PeopleAmount int    `json:"peopleAmount" validate:"required"`
 }

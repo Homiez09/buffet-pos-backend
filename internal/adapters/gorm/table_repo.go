@@ -124,6 +124,7 @@ func (t *TableGormRepository) Assign(ctx context.Context, tableID string, access
 
 	now := time.Now()
 
+	table.IsAvailable = false
 	table.AccessCode = &accessCode
 	table.QRCode = &qrCode
 	table.EntryAt = &now
