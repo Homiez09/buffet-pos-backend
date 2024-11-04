@@ -7,13 +7,14 @@ import (
 )
 
 type BaseTable struct {
-	ID          uuid.UUID `json:"id"`
-	TableName   string    `json:"tableName"`
-	IsAvailable bool      `json:"isAvailable"`
-	QRCode      *string   `json:"qrcode,omitempty"`
-	AccessCode  *string   `json:"accessCode,omitempty"`
-	CreatedAt   time.Time `json:"createdAt"`
-	UpdatedAt   time.Time `json:"updatedAt"`
+	ID          uuid.UUID  `json:"id"`
+	TableName   string     `json:"tableName"`
+	IsAvailable bool       `json:"isAvailable"`
+	QRCode      *string    `json:"qrcode,omitempty"`
+	AccessCode  *string    `json:"accessCode,omitempty"`
+	EntryAt     *time.Time `json:"entryAt,omitempty"`
+	CreatedAt   time.Time  `json:"createdAt"`
+	UpdatedAt   time.Time  `json:"updatedAt"`
 }
 
 type TableDetail struct {
