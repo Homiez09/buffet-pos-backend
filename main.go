@@ -43,6 +43,10 @@ func main() {
 	menuService := usecases.NewMenuService(menuRepo, cfg, cld)
 	menuHandler := rest.NewMenuHandler(menuService)
 
+	settingRepo := gorm.NewSettingGormRepository(db)
+	settingService := usecases.NewSettingService(settingRepo, cfg)
+	settingHandler := rest.NewSettingHandler(settingService)
+
 	app.Use(cors.New())
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
@@ -71,6 +75,9 @@ func main() {
 	manage.Get("/menus/:id", menuHandler.FindByID)
 	manage.Post("/menus", menuHandler.Create)
 	manage.Delete("/menus/:id", menuHandler.Delete)
+
+	manage.Get("/settings/price-per-person", settingHandler.GetPricePerPerson)
+	manage.Put("/settings/price-per-person", settingHandler.SetPricePerPerson)
 
 	app.Listen(":3000")
 }

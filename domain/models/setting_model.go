@@ -1,5 +1,6 @@
 package models
 
 type Setting struct {
-	PricePerPerson float64 `json:"pricePerPerson"`
+	Key   string `json:"key" gorm:"primaryKey"`
+	Value string `json:"value"`
 }

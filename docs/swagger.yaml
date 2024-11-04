@@ -21,6 +21,13 @@ definitions:
     required:
     - tableName
     type: object
+  requests.EditPricePerPerson:
+    properties:
+      price:
+        type: number
+    required:
+    - price
+    type: object
   requests.EditTableRequest:
     properties:
       id:
@@ -78,6 +85,13 @@ definitions:
       isAvailable:
         type: boolean
       name:
+        type: string
+    type: object
+  responses.SettingResponse:
+    properties:
+      key:
+        type: string
+      value:
         type: string
     type: object
   responses.SuccessResponse:
@@ -395,6 +409,57 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Find Menu By ID
+      tags:
+      - Manage
+  /manage/settings/price-per-person:
+    get:
+      consumes:
+      - application/json
+      description: Get price per person in setting.
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SettingResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Price Per Person
+      tags:
+      - Manage
+    put:
+      consumes:
+      - application/json
+      description: Update price per person in setting.
+      parameters:
+      - description: Edit Price Per Person Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.EditPricePerPerson'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Set Price Per Person
       tags:
       - Manage
   /manage/tables:
