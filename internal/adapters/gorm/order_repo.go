@@ -2,7 +2,6 @@ package gorm
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
@@ -23,7 +22,6 @@ func NewOrderGormRepository(db *gorm.DB) *OrderGormRepository {
 func (o *OrderGormRepository) GetOrdersByStatus(ctx context.Context, status string) ([]models.Order, error) {
 	var orders []models.Order
 	result := o.DB.Where("status = ?", status).Find(&orders)
-	fmt.Println(result)
 	if result.Error != nil {
 		return nil, result.Error
 	}
