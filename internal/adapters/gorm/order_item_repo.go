@@ -1,6 +1,8 @@
 package gorm
 
 import (
+	"context"
+
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
 	"github.com/google/uuid"
@@ -17,7 +19,7 @@ func NewOrderItemGormRepository(db *gorm.DB) *OrderItemGormRepository {
 	}
 }
 
-func (o *OrderItemGormRepository) GetOrderItemsByOrderID(orderID string) ([]*models.OrderItem, error) {
+func (o *OrderItemGormRepository) GetOrderItemsByOrderID(ctx context.Context, orderID string) ([]*models.OrderItem, error) {
 	var orderItems []*models.OrderItem
 	result := o.DB.Where("order_id = ?", orderID).Find(&orderItems)
 	if result.Error != nil {
@@ -26,7 +28,7 @@ func (o *OrderItemGormRepository) GetOrderItemsByOrderID(orderID string) ([]*mod
 	return orderItems, nil
 }
 
-func (o *OrderItemGormRepository) CreateOrderItem(orderItem *requests.OrderItemRequest, orderID string) error {
+func (o *OrderItemGormRepository) CreateOrderItem(ctx context.Context, orderItem *requests.OrderItemRequest, orderID string) error {
 	newOrderID, err := uuid.Parse(orderID)
 	if err != nil {
 		return err
@@ -36,7 +38,11 @@ func (o *OrderItemGormRepository) CreateOrderItem(orderItem *requests.OrderItemR
 	if err != nil {
 		return err
 	}
+
+	id := uuid.New()
+
 	newOrderItem := &models.OrderItem{
+		ID:       id,
 		OrderID:  newOrderID,
 		MenuID:   menuID,
 		Quantity: orderItem.Quantity,

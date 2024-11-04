@@ -14,6 +14,7 @@ type TableHandler interface {
 	FindTableByID(c *fiber.Ctx) error
 	Edit(c *fiber.Ctx) error
 	Delete(c *fiber.Ctx) error
+	AssignTable(c *fiber.Ctx) error
 }
 
 type tableHandler struct {
@@ -196,4 +197,45 @@ func (t *tableHandler) Delete(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Table deleted successfully",
 	})
+}
+
+// Assign Table
+// @Summary Assign Table
+// @Description Assign Table by ID.
+// @Tags Manage
+// @Accept json
+// @Produce json
+// @Param request body requests.AssignTableRequest true "Assign Table Request"
+// @Success 200 {object} responses.TableDetail
+// @Router /manage/tables/assign [post]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
+func (t *tableHandler) AssignTable(c *fiber.Ctx) error {
+	var req *requests.AssignTableRequest
+	if err := c.BodyParser(&req); err != nil {
+		c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+	if err := utils.ValidateStruct(req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(err)
+	}
+	table, err := t.service.AssignTable(c.Context(), req)
+	if err != nil {
+		switch err {
+		case exceptions.ErrTableNotFound:
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Table not found",
+			})
+		case exceptions.ErrTableAlreadyAssigned:
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Table already assigned",
+			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+	}
+	return c.Status(fiber.StatusOK).JSON(table)
 }

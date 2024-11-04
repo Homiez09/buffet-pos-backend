@@ -44,6 +44,13 @@ definitions:
     required:
     - tableName
     type: object
+  requests.AssignTableRequest:
+    properties:
+      id:
+        type: string
+    required:
+    - id
+    type: object
   requests.EditPricePerPerson:
     properties:
       price:
@@ -824,6 +831,35 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Find Table By ID
+      tags:
+      - Manage
+  /manage/tables/assign:
+    post:
+      consumes:
+      - application/json
+      description: Assign Table by ID.
+      parameters:
+      - description: Assign Table Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.AssignTableRequest'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.TableDetail'
+      security:
+      - ApiKeyAuth: []
+      summary: Assign Table
       tags:
       - Manage
 swagger: "2.0"

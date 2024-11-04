@@ -15,4 +15,5 @@ type TableRepository interface {
 	FindByName(ctx context.Context, name string) (*models.Table, error)
 	Delete(ctx context.Context, id string) error
 	FindByAccessCode(ctx context.Context, accessCode string) (*models.Table, error)
+	Assign(ctx context.Context, tableID string, accessCode string, qrCode string) error
 }

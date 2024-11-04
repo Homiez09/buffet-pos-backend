@@ -894,6 +894,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/manage/tables/assign": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Assign Table by ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manage"
+                ],
+                "summary": "Assign Table",
+                "parameters": [
+                    {
+                        "description": "Assign Table Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.AssignTableRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.TableDetail"
+                        }
+                    }
+                }
+            }
+        },
         "/manage/tables/{id}": {
             "get": {
                 "security": [
@@ -1043,6 +1089,17 @@ const docTemplate = `{
             ],
             "properties": {
                 "tableName": {
+                    "type": "string"
+                }
+            }
+        },
+        "requests.AssignTableRequest": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
                     "type": "string"
                 }
             }

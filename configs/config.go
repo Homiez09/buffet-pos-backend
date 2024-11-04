@@ -8,6 +8,7 @@ import (
 )
 
 type Config struct {
+	FrontendURL         string `mapstructure:"FRONTEND_URL"`
 	DBHost              string `mapstructure:"DB_HOST"`
 	DBName              string `mapstructure:"DB_DATABASE"`
 	DBUsername          string `mapstructure:"DB_USERNAME"`
@@ -31,6 +32,7 @@ func NewConfig() *Config {
 
 	viper.AutomaticEnv()
 
+	viper.BindEnv("FRONTEND_URL")
 	viper.BindEnv("DB_HOST")
 	viper.BindEnv("DB_DATABASE")
 	viper.BindEnv("DB_USERNAME")

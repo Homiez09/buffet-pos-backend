@@ -1,13 +1,15 @@
 package repositories
 
 import (
+	"context"
+
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
 )
 
 type OrderRepository interface {
-	GetOrdersByStatus(status string) ([]*models.Order, error)
-	GetOrdersByTableID(tableID string) ([]*models.Order, error)
-	UpdateOrderStatus(orderID string, status string) error
-	CreateOrder(order *requests.UserAddOrderRequest) (*models.Order, error)
+	GetOrdersByStatus(ctx context.Context, status string) ([]*models.Order, error)
+	GetOrdersByTableID(ctx context.Context, tableID string) ([]*models.Order, error)
+	UpdateOrderStatus(ctx context.Context, orderID string, status string) error
+	CreateOrder(ctx context.Context, order *requests.UserAddOrderRequest) (*models.Order, error)
 }

@@ -1,6 +1,8 @@
 package usecases
 
 import (
+	"context"
+
 	"github.com/cs471-buffetpos/buffet-pos-backend/configs"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/repositories"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
@@ -8,10 +10,10 @@ import (
 )
 
 type OrderUseCase interface {
-	GetOrdersByStatus(status string) ([]responses.OrderDetail, error)
-	GetOrdersByTableID(tableID string) ([]responses.OrderDetail, error)
-	UpdateOrderStatus(orderID string, status string) error
-	CreateOrder(order *requests.UserAddOrderRequest) error
+	GetOrdersByStatus(ctx context.Context, status string) ([]responses.OrderDetail, error)
+	GetOrdersByTableID(ctx context.Context, tableID string) ([]responses.OrderDetail, error)
+	UpdateOrderStatus(ctx context.Context, orderID string, status string) error
+	CreateOrder(ctx context.Context, order *requests.UserAddOrderRequest) error
 }
 
 type OrderService struct {
@@ -28,8 +30,8 @@ func NewOrderService(orderRepo repositories.OrderRepository, orderItemRepo repos
 	}
 }
 
-func (s *OrderService) GetOrdersByStatus(status string) ([]responses.OrderDetail, error) {
-	orders, err := s.orderRepo.GetOrdersByStatus(status)
+func (s *OrderService) GetOrdersByStatus(ctx context.Context, status string) ([]responses.OrderDetail, error) {
+	orders, err := s.orderRepo.GetOrdersByStatus(ctx, status)
 	if err != nil {
 		return nil, err
 	}
@@ -50,8 +52,8 @@ func (s *OrderService) GetOrdersByStatus(status string) ([]responses.OrderDetail
 	return orderDetails, nil
 }
 
-func (s *OrderService) GetOrdersByTableID(tableID string) ([]responses.OrderDetail, error) {
-	orders, err := s.orderRepo.GetOrdersByTableID(tableID)
+func (s *OrderService) GetOrdersByTableID(ctx context.Context, tableID string) ([]responses.OrderDetail, error) {
+	orders, err := s.orderRepo.GetOrdersByTableID(ctx, tableID)
 	if err != nil {
 		return nil, err
 	}
@@ -71,18 +73,18 @@ func (s *OrderService) GetOrdersByTableID(tableID string) ([]responses.OrderDeta
 	return orderDetails, nil
 }
 
-func (s *OrderService) UpdateOrderStatus(orderID string, status string) error {
-	return s.orderRepo.UpdateOrderStatus(orderID, status)
+func (s *OrderService) UpdateOrderStatus(ctx context.Context, orderID string, status string) error {
+	return s.orderRepo.UpdateOrderStatus(ctx, orderID, status)
 }
 
-func (s *OrderService) CreateOrder(order *requests.UserAddOrderRequest) error {
-	newOrder, err := s.orderRepo.CreateOrder(order)
+func (s *OrderService) CreateOrder(ctx context.Context, order *requests.UserAddOrderRequest) error {
+	newOrder, err := s.orderRepo.CreateOrder(ctx, order)
 	if err != nil {
 		return err
 	}
 
 	for _, item := range order.OrderItems {
-		s.orderItemRepo.CreateOrderItem(&item, newOrder.ID.String())
+		s.orderItemRepo.CreateOrderItem(ctx, &item, newOrder.ID.String())
 	}
 
 	return nil
