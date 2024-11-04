@@ -411,6 +411,27 @@ paths:
       summary: Get Order History
       tags:
       - Customer
+  /customer/tables:
+    get:
+      consumes:
+      - application/json
+      description: Find customer table.
+      parameters:
+      - description: Access Code
+        in: header
+        name: AccessCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.TableDetail'
+      summary: Find Customer Table
+      tags:
+      - Customer
   /manage/categories:
     get:
       consumes:

@@ -3,6 +3,7 @@ package rest
 import (
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/exceptions"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
+	"github.com/cs471-buffetpos/buffet-pos-backend/domain/responses"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/usecases"
 	"github.com/cs471-buffetpos/buffet-pos-backend/utils"
 	"github.com/gofiber/fiber/v2"
@@ -12,6 +13,7 @@ type TableHandler interface {
 	AddTable(c *fiber.Ctx) error
 	FindAllTables(c *fiber.Ctx) error
 	FindTableByID(c *fiber.Ctx) error
+	FindCustomerTable(c *fiber.Ctx) error
 	Edit(c *fiber.Ctx) error
 	Delete(c *fiber.Ctx) error
 	AssignTable(c *fiber.Ctx) error
@@ -238,4 +240,18 @@ func (t *tableHandler) AssignTable(c *fiber.Ctx) error {
 		}
 	}
 	return c.Status(fiber.StatusOK).JSON(table)
+}
+
+// Find Customer Table
+// @Summary Find Customer Table
+// @Description Find customer table.
+// @Tags Customer
+// @Accept json
+// @Produce json
+// @Success 200 {object} responses.TableDetail
+// @Router /customer/tables [get]
+// @param AccessCode header string true "Access Code"
+func (t *tableHandler) FindCustomerTable(c *fiber.Ctx) error {
+	claims, _ := c.Locals("table").(*responses.TableDetail)
+	return c.Status(fiber.StatusOK).JSON(claims)
 }

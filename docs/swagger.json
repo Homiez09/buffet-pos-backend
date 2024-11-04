@@ -260,6 +260,38 @@
                 }
             }
         },
+        "/customer/tables": {
+            "get": {
+                "description": "Find customer table.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customer"
+                ],
+                "summary": "Find Customer Table",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access Code",
+                        "name": "AccessCode",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.TableDetail"
+                        }
+                    }
+                }
+            }
+        },
         "/manage/categories": {
             "get": {
                 "security": [
