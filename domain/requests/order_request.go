@@ -1,7 +1,6 @@
 package requests
 
 type UserAddOrderRequest struct {
-	TableID    string             `json:"table_id" validate:"required"`
 	OrderItems []OrderItemRequest `json:"order_items" validate:"required"`
 }
 

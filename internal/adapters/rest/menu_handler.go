@@ -10,6 +10,7 @@ import (
 
 type MenuHandler interface {
 	Create(c *fiber.Ctx) error
+	CustomerFindAll(c *fiber.Ctx) error
 	FindAll(c *fiber.Ctx) error
 	FindByID(c *fiber.Ctx) error
 	Edit(c *fiber.Ctx) error
@@ -101,6 +102,32 @@ func (m *menuHandler) FindAll(c *fiber.Ctx) error {
 		}
 	}
 
+	return c.Status(fiber.StatusOK).JSON(res)
+}
+
+// Customer Find All Menus
+// @Summary Customer Find All Menus
+// @Description Find all menus.
+// @Tags Customer
+// @Accept json
+// @Produce json
+// @Success 200 {array} responses.MenuDetail
+// @Router /customer/menus [get]
+// @param AccessCode header string true "Access Code"
+func (m *menuHandler) CustomerFindAll(c *fiber.Ctx) error {
+	res, err := m.service.FindAll(c.Context())
+	if err != nil {
+		switch err {
+		case exceptions.ErrMenuNotFound:
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Menu not have",
+			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+	}
 	return c.Status(fiber.StatusOK).JSON(res)
 }
 

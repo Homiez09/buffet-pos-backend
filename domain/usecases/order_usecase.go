@@ -13,7 +13,7 @@ type OrderUseCase interface {
 	GetOrdersByStatus(ctx context.Context, status string) ([]responses.OrderDetail, error)
 	GetOrdersByTableID(ctx context.Context, tableID string) ([]responses.OrderDetail, error)
 	UpdateOrderStatus(ctx context.Context, orderID string, status string) error
-	CreateOrder(ctx context.Context, order *requests.UserAddOrderRequest) error
+	CreateOrder(ctx context.Context, order *requests.UserAddOrderRequest, tableID string) error
 }
 
 type OrderService struct {
@@ -77,8 +77,8 @@ func (s *OrderService) UpdateOrderStatus(ctx context.Context, orderID string, st
 	return s.orderRepo.UpdateOrderStatus(ctx, orderID, status)
 }
 
-func (s *OrderService) CreateOrder(ctx context.Context, order *requests.UserAddOrderRequest) error {
-	newOrder, err := s.orderRepo.CreateOrder(ctx, order)
+func (s *OrderService) CreateOrder(ctx context.Context, order *requests.UserAddOrderRequest, tableID string) error {
+	newOrder, err := s.orderRepo.CreateOrder(ctx, order, tableID)
 	if err != nil {
 		return err
 	}

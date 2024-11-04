@@ -97,11 +97,8 @@ definitions:
         items:
           $ref: '#/definitions/requests.OrderItemRequest'
         type: array
-      table_id:
-        type: string
     required:
     - order_items
-    - table_id
     type: object
   requests.UserLoginRequest:
     properties:
@@ -266,6 +263,29 @@ paths:
       summary: User register (Employee Role by default)
       tags:
       - User
+  /customer/menus:
+    get:
+      consumes:
+      - application/json
+      description: Find all menus.
+      parameters:
+      - description: Access Code
+        in: header
+        name: AccessCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/responses.MenuDetail'
+            type: array
+      summary: Customer Find All Menus
+      tags:
+      - Customer
   /customer/orders:
     post:
       consumes:
