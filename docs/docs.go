@@ -822,6 +822,53 @@ const docTemplate = `{
                 }
             }
         },
+        "/manage/orders": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get orders by status.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manage"
+                ],
+                "summary": "Get Orders By Status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Status of order",
+                        "name": "status",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.OrderDetail"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/manage/orders/status": {
             "put": {
                 "security": [
@@ -868,54 +915,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/manage/orders/status/:status": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get orders by status.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Manage"
-                ],
-                "summary": "Get Orders By Status",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order Status",
-                        "name": "status",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Authorization",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/responses.OrderDetail"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/manage/orders/table/:tableID": {
+        "/manage/orders/tables": {
             "get": {
                 "security": [
                     {
@@ -938,7 +938,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Table ID",
                         "name": "tableID",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     },
                     {

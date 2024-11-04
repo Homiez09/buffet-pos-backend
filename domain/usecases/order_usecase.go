@@ -2,8 +2,10 @@ package usecases
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cs471-buffetpos/buffet-pos-backend/configs"
+	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/repositories"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/responses"
@@ -39,12 +41,16 @@ func (s *OrderService) GetOrdersByStatus(ctx context.Context, status string) ([]
 
 	orderDetails := make([]responses.OrderDetail, 0)
 	for _, order := range orders {
+		orderItems, err := s.orderItemRepo.GetOrderItemsByOrderID(ctx, order.ID.String())
+		if err != nil {
+			return nil, err
+		}
 		orderDetails = append(orderDetails, responses.OrderDetail{
 			BaseOrder: responses.BaseOrder{
 				ID:        order.ID,
 				TableID:   order.TableID,
 				Status:    order.Status,
-				OrderItem: order.OrderItems,
+				OrderItem: orderItems,
 				CreatedAt: order.CreatedAt,
 				UpdatedAt: order.UpdatedAt,
 			},
@@ -60,12 +66,16 @@ func (s *OrderService) GetOrdersByTableID(ctx context.Context, tableID string) (
 	}
 	orderDetails := make([]responses.OrderDetail, 0)
 	for _, order := range orders {
+		orderItems, err := s.orderItemRepo.GetOrderItemsByOrderID(ctx, order.ID.String())
+		if err != nil {
+			return nil, err
+		}
 		orderDetails = append(orderDetails, responses.OrderDetail{
 			BaseOrder: responses.BaseOrder{
 				ID:        order.ID,
 				TableID:   order.TableID,
 				Status:    order.Status,
-				OrderItem: order.OrderItems,
+				OrderItem: orderItems,
 				CreatedAt: order.CreatedAt,
 				UpdatedAt: order.UpdatedAt,
 			},
@@ -96,14 +106,24 @@ func (s *OrderService) GetOrderHistory(ctx context.Context, tableID string) ([]r
 	if err != nil {
 		return nil, err
 	}
+
 	orderDetails := make([]responses.OrderDetail, 0)
 	for _, order := range orders {
+		orderItems := make([]models.OrderItem, 0)
+		orderItem, err := s.orderItemRepo.GetOrderItemsByOrderID(ctx, order.ID.String())
+		fmt.Println(orderItem)
+		if err != nil {
+			return nil, err
+		}
+		for _, item := range orderItem {
+			orderItems = append(orderItems, item)
+		}
 		orderDetails = append(orderDetails, responses.OrderDetail{
 			BaseOrder: responses.BaseOrder{
 				ID:        order.ID,
 				TableID:   order.TableID,
 				Status:    order.Status,
-				OrderItem: order.OrderItems,
+				OrderItem: orderItems,
 				CreatedAt: order.CreatedAt,
 				UpdatedAt: order.UpdatedAt,
 			},

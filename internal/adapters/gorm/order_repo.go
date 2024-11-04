@@ -2,6 +2,7 @@ package gorm
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
@@ -19,17 +20,18 @@ func NewOrderGormRepository(db *gorm.DB) *OrderGormRepository {
 	}
 }
 
-func (o *OrderGormRepository) GetOrdersByStatus(ctx context.Context, status string) ([]*models.Order, error) {
-	var orders []*models.Order
+func (o *OrderGormRepository) GetOrdersByStatus(ctx context.Context, status string) ([]models.Order, error) {
+	var orders []models.Order
 	result := o.DB.Where("status = ?", status).Find(&orders)
+	fmt.Println(result)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return orders, nil
 }
 
-func (o *OrderGormRepository) GetOrdersByTableID(ctx context.Context, tableID string) ([]*models.Order, error) {
-	var orders []*models.Order
+func (o *OrderGormRepository) GetOrdersByTableID(ctx context.Context, tableID string) ([]models.Order, error) {
+	var orders []models.Order
 	result := o.DB.Where("table_id = ?", tableID).Find(&orders)
 	if result.Error != nil {
 		return nil, result.Error
@@ -64,8 +66,8 @@ func (o *OrderGormRepository) CreateOrder(ctx context.Context, order *requests.U
 	return newOrder, nil
 }
 
-func (o *OrderGormRepository) GetOrderHistory(ctx context.Context, tableID string) ([]*models.Order, error) {
-	var orders []*models.Order
+func (o *OrderGormRepository) GetOrderHistory(ctx context.Context, tableID string) ([]models.Order, error) {
+	var orders []models.Order
 	result := o.DB.Where("table_id = ? AND created_at > (SELECT entry_at FROM tables WHERE id = ?)", tableID, tableID).Find(&orders)
 	if result.Error != nil {
 		return nil, result.Error
