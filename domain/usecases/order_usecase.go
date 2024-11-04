@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/cs471-buffetpos/buffet-pos-backend/configs"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
@@ -111,7 +110,6 @@ func (s *OrderService) GetOrderHistory(ctx context.Context, tableID string) ([]r
 	for _, order := range orders {
 		orderItems := make([]models.OrderItem, 0)
 		orderItem, err := s.orderItemRepo.GetOrderItemsByOrderID(ctx, order.ID.String())
-		fmt.Println(orderItem)
 		if err != nil {
 			return nil, err
 		}
