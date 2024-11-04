@@ -83,6 +83,7 @@ func main() {
 	manage.Delete("/tables/:id", tableHandler.Delete)
 	manage.Post("/tables/assign", tableHandler.AssignTable)
 
+	manage.Get("/invoices/paid", invoiceHandler.GetAllPaidInvoices)
 	manage.Get("/invoices/unpaid", invoiceHandler.GetAllUnpaidInvoices)
 	manage.Put("/invoices/set-paid", invoiceHandler.SetInvoicePaid)
 	manage.Delete("/invoices/cancel", invoiceHandler.CancelInvoice)

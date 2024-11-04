@@ -9,6 +9,7 @@ import (
 
 type InvoiceHandler interface {
 	GetAllUnpaidInvoices(c *fiber.Ctx) error
+	GetAllPaidInvoices(c *fiber.Ctx) error
 	SetInvoicePaid(c *fiber.Ctx) error
 	CancelInvoice(c *fiber.Ctx) error
 }
@@ -35,6 +36,26 @@ func NewInvoiceHandler(service usecases.InvoiceUseCase) InvoiceHandler {
 // @param Authorization header string true "Authorization"
 func (i *invoiceHandler) GetAllUnpaidInvoices(c *fiber.Ctx) error {
 	invoices, err := i.service.GetAllUnpaidInvoices(c.Context())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+	return c.JSON(invoices)
+}
+
+// Get All Paid Invoices
+// @Summary Get All Paid
+// @Description Get all paid invoices.
+// @Tags Manage
+// @Accept json
+// @Produce json
+// @Success 200 {array} responses.InvoiceDetail
+// @Router /manage/invoices/paid [get]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
+func (i *invoiceHandler) GetAllPaidInvoices(c *fiber.Ctx) error {
+	invoices, err := i.service.GetAllPaidInvoices(c.Context())
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),

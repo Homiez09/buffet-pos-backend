@@ -10,6 +10,7 @@ import (
 
 type InvoiceUseCase interface {
 	GetAllUnpaidInvoices(ctx context.Context) ([]responses.InvoiceDetail, error)
+	GetAllPaidInvoices(ctx context.Context) ([]responses.InvoiceDetail, error)
 	DeleteInvoice(ctx context.Context, invoiceID string) error
 	SetPaidInvoice(ctx context.Context, invoiceID string) error
 }
@@ -35,6 +36,28 @@ func (i *InvoiceService) GetAllUnpaidInvoices(ctx context.Context) ([]responses.
 	}
 	invoiceDetails := make([]responses.InvoiceDetail, 0)
 
+	for _, invoice := range invoices {
+		invoiceDetails = append(invoiceDetails, responses.InvoiceDetail{
+			BaseInvoice: responses.BaseInvoice{
+				ID:           invoice.ID,
+				PeopleAmount: invoice.PeopleAmount,
+				TotalPrice:   invoice.TotalPrice,
+				IsPaid:       invoice.IsPaid,
+				TableID:      invoice.TableID,
+				CreatedAt:    invoice.CreatedAt,
+				UpdatedAt:    invoice.UpdatedAt,
+			},
+		})
+	}
+	return invoiceDetails, nil
+}
+
+func (i *InvoiceService) GetAllPaidInvoices(ctx context.Context) ([]responses.InvoiceDetail, error) {
+	invoices, err := i.invoiceRepo.GetAllPaid(ctx)
+	if err != nil {
+		return nil, err
+	}
+	invoiceDetails := make([]responses.InvoiceDetail, 0)
 	for _, invoice := range invoices {
 		invoiceDetails = append(invoiceDetails, responses.InvoiceDetail{
 			BaseInvoice: responses.BaseInvoice{
