@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type Invoice struct {
@@ -14,4 +15,5 @@ type Invoice struct {
 	TableID      *uuid.UUID `json:"tableId" gorm:"type:uuid;foreignKey:TableID"`
 	CreatedAt    time.Time  `json:"createdAt"`
 	UpdatedAt    time.Time  `json:"updatedAt"`
+	DeletedAt    gorm.DeletedAt
 }

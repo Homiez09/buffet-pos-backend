@@ -31,15 +31,18 @@ func main() {
 	settingService := usecases.NewSettingService(settingRepo, cfg)
 	settingHandler := rest.NewSettingHandler(settingService)
 
-	invoiceRepo := gorm.NewInvoiceGormRepository(db)
-
 	userRepo := gorm.NewUserGormRepository(db)
 	userService := usecases.NewUserService(userRepo, cfg)
 	userHandler := rest.NewUserHandler(userService)
 
+	invoiceRepo := gorm.NewInvoiceGormRepository(db)
 	tableRepo := gorm.NewTableGormRepository(db)
+
+	invoiceService := usecases.NewInvoiceService(invoiceRepo, tableRepo, cfg)
 	tableService := usecases.NewTableService(tableRepo, invoiceRepo, settingRepo, cfg)
+
 	tableHandler := rest.NewTableHandler(tableService)
+	invoiceHandler := rest.NewInvoiceHandler(invoiceService)
 
 	categoryRepo := gorm.NewCategoryGormRepository(db)
 	categoryService := usecases.NewCategoryService(categoryRepo, cfg)
@@ -79,6 +82,10 @@ func main() {
 	manage.Put("/tables", tableHandler.Edit)
 	manage.Delete("/tables/:id", tableHandler.Delete)
 	manage.Post("/tables/assign", tableHandler.AssignTable)
+
+	manage.Get("/invoices/unpaid", invoiceHandler.GetAllUnpaidInvoices)
+	manage.Put("/invoices/set-paid", invoiceHandler.SetInvoicePaid)
+	manage.Delete("/invoices/cancel", invoiceHandler.CancelInvoice)
 
 	manage.Get("/categories", categoryHandler.FindAllCategories)
 	manage.Get("/categories/:id", categoryHandler.FindCategoryByID)

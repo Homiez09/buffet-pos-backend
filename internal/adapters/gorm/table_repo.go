@@ -131,3 +131,21 @@ func (t *TableGormRepository) Assign(ctx context.Context, tableID string, access
 	result := t.DB.Save(table)
 	return result.Error
 }
+
+func (t *TableGormRepository) SetAvailability(ctx context.Context, tableID string, availability bool) error {
+	table, err := t.FindByID(ctx, tableID)
+	if err != nil {
+		return err
+	}
+	if table == nil {
+		return nil
+	}
+	table.IsAvailable = availability
+	if availability {
+		table.AccessCode = nil
+		table.QRCode = nil
+		table.EntryAt = nil
+	}
+	result := t.DB.Save(table)
+	return result.Error
+}
