@@ -71,6 +71,7 @@ func main() {
 
 	customer := app.Group("/customer", middleware.CustomerMiddleware(cfg, tableService))
 	customer.Get("/menus", menuHandler.CustomerFindAll)
+	customer.Get("/menus/:id", menuHandler.CustomerFindByID)
 	customer.Post("/orders", orderHandler.CreateOrder)
 	customer.Get("/orders/history", orderHandler.CustomerGetOrderHistory)
 	customer.Get("/categories", categoryHandler.FindAllCategories)

@@ -145,6 +145,45 @@
                 }
             }
         },
+        "/customer/menus/{id}": {
+            "get": {
+                "description": "Find menu by ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customer"
+                ],
+                "summary": "Customer Find Menu By ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Menu ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Access Code",
+                        "name": "AccessCode",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.MenuDetail"
+                        }
+                    }
+                }
+            }
+        },
         "/customer/orders": {
             "post": {
                 "description": "Add order to table.",

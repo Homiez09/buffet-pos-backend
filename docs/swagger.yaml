@@ -335,6 +335,32 @@ paths:
       summary: Customer Find All Menus
       tags:
       - Customer
+  /customer/menus/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Find menu by ID.
+      parameters:
+      - description: Menu ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Access Code
+        in: header
+        name: AccessCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.MenuDetail'
+      summary: Customer Find Menu By ID
+      tags:
+      - Customer
   /customer/orders:
     post:
       consumes:

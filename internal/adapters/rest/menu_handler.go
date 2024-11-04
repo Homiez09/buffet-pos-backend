@@ -11,6 +11,7 @@ import (
 type MenuHandler interface {
 	Create(c *fiber.Ctx) error
 	CustomerFindAll(c *fiber.Ctx) error
+	CustomerFindByID(c *fiber.Ctx) error
 	FindAll(c *fiber.Ctx) error
 	FindByID(c *fiber.Ctx) error
 	Edit(c *fiber.Ctx) error
@@ -248,4 +249,37 @@ func (m *menuHandler) Edit(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Edit Menu successfully",
 	})
+}
+
+// Customer Find Menu By ID
+// @Summary Customer Find Menu By ID
+// @Description Find menu by ID.
+// @Tags Customer
+// @Accept json
+// @Produce json
+// @Param id path string true "Menu ID"
+// @Success 200 {object} responses.MenuDetail
+// @Router /customer/menus/{id} [get]
+// @param AccessCode header string true "Access Code"
+func (m *menuHandler) CustomerFindByID(c *fiber.Ctx) error {
+	id, err := utils.ValidateUUID(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid UUID",
+		})
+	}
+	res, err := m.service.FindByID(c.Context(), *id)
+	if err != nil {
+		switch err {
+		case exceptions.ErrMenuNotFound:
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Menu not found",
+			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+	}
+	return c.Status(fiber.StatusOK).JSON(res)
 }
