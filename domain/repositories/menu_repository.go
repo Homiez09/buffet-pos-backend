@@ -13,4 +13,5 @@ type MenuRepository interface {
 	FindByID(ctx context.Context, email string) (*models.Menu, error)
 	Edit(ctx context.Context, req *requests.EditMenuRequest, imageURL string) error
 	Delete(ctx context.Context, id string) error
+	FindByName(ctx context.Context, name string) (*models.Menu, error)
 }
