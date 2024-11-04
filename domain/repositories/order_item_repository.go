@@ -8,6 +8,6 @@ import (
 )
 
 type OrderItemRepository interface {
-	GetOrderItemsByOrderID(ctx context.Context, orderID string) ([]*models.OrderItem, error)
+	GetOrderItemsByOrderID(ctx context.Context, orderID string) ([]models.OrderItem, error)
 	CreateOrderItem(ctx context.Context, orderItem *requests.OrderItemRequest, orderID string) error
 }

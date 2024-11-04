@@ -99,8 +99,8 @@ func main() {
 	manage.Put("/menus", menuHandler.Edit)
 	manage.Delete("/menus/:id", menuHandler.Delete)
 
-	manage.Get("/orders/status/:status", orderHandler.GetOrdersByStatus)
-	manage.Get("/orders/table/:tableID", orderHandler.GetOrdersByTableID)
+	manage.Get("/orders", orderHandler.GetOrdersByStatus)
+	manage.Get("/orders/tables", orderHandler.GetOrdersByTableID)
 	manage.Put("/orders/status", orderHandler.UpdateOrderStatus)
 
 	manage.Get("/settings/price-per-person", settingHandler.GetPricePerPerson)

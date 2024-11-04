@@ -32,12 +32,12 @@ func NewOrderHandler(service usecases.OrderUseCase) OrderHandler {
 // @Accept json
 // @Produce json
 // @Success 200 {array} responses.OrderDetail
-// @Router /manage/orders/status/:status [get]
-// @Param status path string true "Order Status"
+// @Router /manage/orders [get]
+// @Param status query string true "Status of order"
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (h *orderHandler) GetOrdersByStatus(c *fiber.Ctx) error {
-	status := c.Params("status")
+	status := c.Query("status")
 	orders, err := h.service.GetOrdersByStatus(c.Context(), status)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -54,12 +54,12 @@ func (h *orderHandler) GetOrdersByStatus(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Success 200 {array} responses.OrderDetail
-// @Router /manage/orders/table/:tableID [get]
-// @Param tableID path string true "Table ID"
+// @Router /manage/orders/tables [get]
+// @Param tableID query string true "Table ID"
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (h *orderHandler) GetOrdersByTableID(c *fiber.Ctx) error {
-	tableID := c.Params("tableID")
+	tableID := c.Query("tableID")
 	orders, err := h.service.GetOrdersByTableID(c.Context(), tableID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

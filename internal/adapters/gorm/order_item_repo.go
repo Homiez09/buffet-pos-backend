@@ -19,8 +19,8 @@ func NewOrderItemGormRepository(db *gorm.DB) *OrderItemGormRepository {
 	}
 }
 
-func (o *OrderItemGormRepository) GetOrderItemsByOrderID(ctx context.Context, orderID string) ([]*models.OrderItem, error) {
-	var orderItems []*models.OrderItem
+func (o *OrderItemGormRepository) GetOrderItemsByOrderID(ctx context.Context, orderID string) ([]models.OrderItem, error) {
+	var orderItems []models.OrderItem
 	result := o.DB.Where("order_id = ?", orderID).Find(&orderItems)
 	if result.Error != nil {
 		return nil, result.Error
