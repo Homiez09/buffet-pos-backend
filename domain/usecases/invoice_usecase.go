@@ -19,13 +19,15 @@ type InvoiceUseCase interface {
 type InvoiceService struct {
 	invoiceRepo repositories.InvoiceRepository
 	tableRepo   repositories.TableRepository
+	orderRepo   repositories.OrderRepository
 	config      *configs.Config
 }
 
-func NewInvoiceService(invoiceRepo repositories.InvoiceRepository, tableRepo repositories.TableRepository, config *configs.Config) InvoiceUseCase {
+func NewInvoiceService(invoiceRepo repositories.InvoiceRepository, tableRepo repositories.TableRepository, orderRepo repositories.OrderRepository, config *configs.Config) InvoiceUseCase {
 	return &InvoiceService{
 		invoiceRepo: invoiceRepo,
 		tableRepo:   tableRepo,
+		orderRepo:   orderRepo,
 		config:      config,
 	}
 }
@@ -87,6 +89,11 @@ func (i *InvoiceService) DeleteInvoice(ctx context.Context, invoiceID string) er
 	}
 
 	err = i.tableRepo.SetAvailability(ctx, invoice.TableID.String(), true)
+	if err != nil {
+		return err
+	}
+
+	err = i.orderRepo.SetAllPreparingToServed(ctx, invoice.TableID.String())
 	if err != nil {
 		return err
 	}

@@ -13,4 +13,5 @@ type OrderRepository interface {
 	UpdateOrderStatus(ctx context.Context, orderID string, status string) error
 	CreateOrder(ctx context.Context, order *requests.UserAddOrderRequest, tableID string) (*models.Order, error)
 	GetOrderHistory(ctx context.Context, tableID string) ([]models.Order, error)
+	SetAllPreparingToServed(ctx context.Context, tableID string) error
 }

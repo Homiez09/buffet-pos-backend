@@ -32,27 +32,27 @@ func main() {
 	settingHandler := rest.NewSettingHandler(settingService)
 
 	userRepo := gorm.NewUserGormRepository(db)
+	invoiceRepo := gorm.NewInvoiceGormRepository(db)
+	tableRepo := gorm.NewTableGormRepository(db)
+	categoryRepo := gorm.NewCategoryGormRepository(db)
+	menuRepo := gorm.NewMenuGormRepository(db)
+	orderRepo := gorm.NewOrderGormRepository(db)
+
 	userService := usecases.NewUserService(userRepo, cfg)
 	userHandler := rest.NewUserHandler(userService)
 
-	invoiceRepo := gorm.NewInvoiceGormRepository(db)
-	tableRepo := gorm.NewTableGormRepository(db)
-
-	invoiceService := usecases.NewInvoiceService(invoiceRepo, tableRepo, cfg)
+	invoiceService := usecases.NewInvoiceService(invoiceRepo, tableRepo, orderRepo, cfg)
 	tableService := usecases.NewTableService(tableRepo, invoiceRepo, settingRepo, cfg)
 
 	tableHandler := rest.NewTableHandler(tableService)
 	invoiceHandler := rest.NewInvoiceHandler(invoiceService)
 
-	categoryRepo := gorm.NewCategoryGormRepository(db)
 	categoryService := usecases.NewCategoryService(categoryRepo, cfg)
 	categoryHandler := rest.NewCategoryHandler(categoryService)
 
-	menuRepo := gorm.NewMenuGormRepository(db)
 	menuService := usecases.NewMenuService(menuRepo, cfg, cld)
 	menuHandler := rest.NewMenuHandler(menuService)
 
-	orderRepo := gorm.NewOrderGormRepository(db)
 	orderItemRepo := gorm.NewOrderItemGormRepository(db)
 	orderService := usecases.NewOrderService(orderRepo, orderItemRepo, menuRepo, cfg)
 	orderHandler := rest.NewOrderHandler(orderService)
