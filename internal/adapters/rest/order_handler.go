@@ -12,6 +12,7 @@ type OrderHandler interface {
 	GetOrdersByTableID(c *fiber.Ctx) error
 	UpdateOrderStatus(c *fiber.Ctx) error
 	CreateOrder(c *fiber.Ctx) error
+	CustomerGetOrderHistory(c *fiber.Ctx) error
 }
 
 type orderHandler struct {
@@ -130,4 +131,30 @@ func (h *orderHandler) CreateOrder(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "Order created successfully",
 	})
+}
+
+// Customer Get Order History
+// @Summary Get Order History
+// @Description Get order history for table.
+// @Tags Customer
+// @Accept json
+// @Produce json
+// @Success 200 {array} responses.OrderDetail
+// @Router /customer/orders/history [get]
+// @param AccessCode header string true "Access Code"
+func (h *orderHandler) CustomerGetOrderHistory(c *fiber.Ctx) error {
+	claims, ok := c.Locals("table").(*responses.TableDetail)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Unauthorized",
+		})
+	}
+	tableID := claims.ID
+	orders, err := h.service.GetOrderHistory(c.Context(), tableID.String())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+	return c.JSON(orders)
 }

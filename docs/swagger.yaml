@@ -184,6 +184,8 @@ definitions:
         type: string
       createdAt:
         type: string
+      entryAt:
+        type: string
       id:
         type: string
       isAvailable:
@@ -311,6 +313,29 @@ paths:
           schema:
             $ref: '#/definitions/responses.SuccessResponse'
       summary: Add Order
+      tags:
+      - Customer
+  /customer/orders/history:
+    get:
+      consumes:
+      - application/json
+      description: Get order history for table.
+      parameters:
+      - description: Access Code
+        in: header
+        name: AccessCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/responses.OrderDetail'
+            type: array
+      summary: Get Order History
       tags:
       - Customer
   /manage/categories:

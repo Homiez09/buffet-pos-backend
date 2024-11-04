@@ -69,6 +69,7 @@ func main() {
 	customer := app.Group("/customer", middleware.CustomerMiddleware(cfg, tableService))
 	customer.Get("/menus", menuHandler.CustomerFindAll)
 	customer.Post("/orders", orderHandler.CreateOrder)
+	customer.Get("/orders/history", orderHandler.CustomerGetOrderHistory)
 
 	manage := app.Group("/manage", middleware.AuthMiddleware(cfg), middleware.RoleMiddleware(models.Employee, models.Manager))
 	manage.Get("/tables", tableHandler.FindAllTables)

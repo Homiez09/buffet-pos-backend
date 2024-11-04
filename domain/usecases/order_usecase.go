@@ -14,6 +14,7 @@ type OrderUseCase interface {
 	GetOrdersByTableID(ctx context.Context, tableID string) ([]responses.OrderDetail, error)
 	UpdateOrderStatus(ctx context.Context, orderID string, status string) error
 	CreateOrder(ctx context.Context, order *requests.UserAddOrderRequest, tableID string) error
+	GetOrderHistory(ctx context.Context, tableID string) ([]responses.OrderDetail, error)
 }
 
 type OrderService struct {
@@ -44,8 +45,8 @@ func (s *OrderService) GetOrdersByStatus(ctx context.Context, status string) ([]
 				TableID:   order.TableID,
 				Status:    order.Status,
 				OrderItem: order.OrderItems,
-				CreatedAt: order.CreatedAt.String(),
-				UpdatedAt: order.UpdatedAt.String(),
+				CreatedAt: order.CreatedAt,
+				UpdatedAt: order.UpdatedAt,
 			},
 		})
 	}
@@ -65,8 +66,8 @@ func (s *OrderService) GetOrdersByTableID(ctx context.Context, tableID string) (
 				TableID:   order.TableID,
 				Status:    order.Status,
 				OrderItem: order.OrderItems,
-				CreatedAt: order.CreatedAt.String(),
-				UpdatedAt: order.UpdatedAt.String(),
+				CreatedAt: order.CreatedAt,
+				UpdatedAt: order.UpdatedAt,
 			},
 		})
 	}
@@ -88,4 +89,25 @@ func (s *OrderService) CreateOrder(ctx context.Context, order *requests.UserAddO
 	}
 
 	return nil
+}
+
+func (s *OrderService) GetOrderHistory(ctx context.Context, tableID string) ([]responses.OrderDetail, error) {
+	orders, err := s.orderRepo.GetOrderHistory(ctx, tableID)
+	if err != nil {
+		return nil, err
+	}
+	orderDetails := make([]responses.OrderDetail, 0)
+	for _, order := range orders {
+		orderDetails = append(orderDetails, responses.OrderDetail{
+			BaseOrder: responses.BaseOrder{
+				ID:        order.ID,
+				TableID:   order.TableID,
+				Status:    order.Status,
+				OrderItem: order.OrderItems,
+				CreatedAt: order.CreatedAt,
+				UpdatedAt: order.UpdatedAt,
+			},
+		})
+	}
+	return orderDetails, nil
 }

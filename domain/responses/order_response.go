@@ -1,6 +1,8 @@
 package responses
 
 import (
+	"time"
+
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
 	"github.com/google/uuid"
 )
@@ -10,8 +12,8 @@ type BaseOrder struct {
 	TableID   uuid.UUID          `json:"tableId"`
 	Status    models.OrderStatus `json:"status"`
 	OrderItem []models.OrderItem `json:"orderItem"`
-	CreatedAt string             `json:"createdAt"`
-	UpdatedAt string             `json:"updatedAt"`
+	CreatedAt time.Time          `json:"createdAt"`
+	UpdatedAt time.Time          `json:"updatedAt"`
 }
 
 type OrderDetail struct {

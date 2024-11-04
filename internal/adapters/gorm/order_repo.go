@@ -63,3 +63,12 @@ func (o *OrderGormRepository) CreateOrder(ctx context.Context, order *requests.U
 
 	return newOrder, nil
 }
+
+func (o *OrderGormRepository) GetOrderHistory(ctx context.Context, tableID string) ([]*models.Order, error) {
+	var orders []*models.Order
+	result := o.DB.Where("table_id = ? AND created_at > (SELECT entry_at FROM tables WHERE id = ?)", tableID, tableID).Find(&orders)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return orders, nil
+}

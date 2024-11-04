@@ -159,6 +159,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/customer/orders/history": {
+            "get": {
+                "description": "Get order history for table.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customer"
+                ],
+                "summary": "Get Order History",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access Code",
+                        "name": "AccessCode",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.OrderDetail"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/manage/categories": {
             "get": {
                 "security": [
@@ -1339,6 +1374,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "createdAt": {
+                    "type": "string"
+                },
+                "entryAt": {
                     "type": "string"
                 },
                 "id": {
