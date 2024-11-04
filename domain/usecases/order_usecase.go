@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/cs471-buffetpos/buffet-pos-backend/configs"
+	"github.com/cs471-buffetpos/buffet-pos-backend/domain/exceptions"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/models"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/repositories"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
@@ -21,13 +22,15 @@ type OrderUseCase interface {
 type OrderService struct {
 	orderRepo     repositories.OrderRepository
 	orderItemRepo repositories.OrderItemRepository
+	menuRepo      repositories.MenuRepository
 	config        *configs.Config
 }
 
-func NewOrderService(orderRepo repositories.OrderRepository, orderItemRepo repositories.OrderItemRepository, config *configs.Config) OrderUseCase {
+func NewOrderService(orderRepo repositories.OrderRepository, orderItemRepo repositories.OrderItemRepository, menuRepo repositories.MenuRepository, config *configs.Config) OrderUseCase {
 	return &OrderService{
 		orderRepo:     orderRepo,
 		orderItemRepo: orderItemRepo,
+		menuRepo:      menuRepo,
 		config:        config,
 	}
 }
@@ -88,6 +91,25 @@ func (s *OrderService) UpdateOrderStatus(ctx context.Context, orderID string, st
 }
 
 func (s *OrderService) CreateOrder(ctx context.Context, order *requests.UserAddOrderRequest, tableID string) error {
+	// check if all menu items are available
+	for _, item := range order.OrderItems {
+		menu, err := s.menuRepo.FindByID(ctx, item.MenuID)
+		if err != nil {
+			return err
+		}
+		if menu == nil {
+			return exceptions.ErrMenuNotFound
+		}
+
+		if !menu.IsAvailable {
+			return exceptions.ErrMenuNotAvailable
+		}
+
+		if item.Quantity < 1 {
+			return exceptions.ErrInvalidQuantity
+		}
+	}
+
 	newOrder, err := s.orderRepo.CreateOrder(ctx, order, tableID)
 	if err != nil {
 		return err

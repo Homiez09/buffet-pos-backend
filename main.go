@@ -54,7 +54,7 @@ func main() {
 
 	orderRepo := gorm.NewOrderGormRepository(db)
 	orderItemRepo := gorm.NewOrderItemGormRepository(db)
-	orderService := usecases.NewOrderService(orderRepo, orderItemRepo, cfg)
+	orderService := usecases.NewOrderService(orderRepo, orderItemRepo, menuRepo, cfg)
 	orderHandler := rest.NewOrderHandler(orderService)
 
 	app.Use(cors.New())
