@@ -156,3 +156,22 @@ func (ct *categoryHandler) DeleteCategory(c *fiber.Ctx) error {
 		"message": "Category deleted successfully",
 	})
 }
+
+// Customer Get All Categories
+// @Summary Get All Categories
+// @Description Get all categories.
+// @Tags Customer
+// @Accept json
+// @Produce json
+// @Success 200 {array} responses.CategoryDetail
+// @Router /customer/categories [get]
+// @param AccessCode header string true "Access Code"
+func (ct *categoryHandler) GetAllCategories(c *fiber.Ctx) error {
+	categories, err := ct.service.FindAllCategories(c.Context())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(categories)
+}
