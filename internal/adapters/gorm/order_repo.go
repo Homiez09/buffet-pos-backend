@@ -42,8 +42,8 @@ func (o *OrderGormRepository) UpdateOrderStatus(ctx context.Context, orderID str
 	return result.Error
 }
 
-func (o *OrderGormRepository) CreateOrder(ctx context.Context, order *requests.UserAddOrderRequest) (*models.Order, error) {
-	tableID, err := uuid.Parse(order.TableID)
+func (o *OrderGormRepository) CreateOrder(ctx context.Context, order *requests.UserAddOrderRequest, tableID string) (*models.Order, error) {
+	tableIDParse, err := uuid.Parse(tableID)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (o *OrderGormRepository) CreateOrder(ctx context.Context, order *requests.U
 
 	newOrder := &models.Order{
 		ID:      id,
-		TableID: tableID,
+		TableID: tableIDParse,
 		Status:  models.PREPARING,
 	}
 

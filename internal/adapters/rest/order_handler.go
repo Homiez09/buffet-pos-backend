@@ -2,6 +2,7 @@ package rest
 
 import (
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/requests"
+	"github.com/cs471-buffetpos/buffet-pos-backend/domain/responses"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/usecases"
 	"github.com/gofiber/fiber/v2"
 )
@@ -112,7 +113,16 @@ func (h *orderHandler) CreateOrder(c *fiber.Ctx) error {
 			"error": "Failed to parse request body",
 		})
 	}
-	if err := h.service.CreateOrder(c.Context(), &req); err != nil {
+
+	claims, ok := c.Locals("table").(*responses.TableDetail)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Unauthorized",
+		})
+	}
+	tableID := claims.ID
+
+	if err := h.service.CreateOrder(c.Context(), &req, tableID.String()); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
 		})

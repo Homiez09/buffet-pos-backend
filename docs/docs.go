@@ -83,6 +83,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/customer/menus": {
+            "get": {
+                "description": "Find all menus.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customer"
+                ],
+                "summary": "Customer Find All Menus",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access Code",
+                        "name": "AccessCode",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.MenuDetail"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/customer/orders": {
             "post": {
                 "description": "Add order to table.",
@@ -1167,8 +1202,7 @@ const docTemplate = `{
         "requests.UserAddOrderRequest": {
             "type": "object",
             "required": [
-                "order_items",
-                "table_id"
+                "order_items"
             ],
             "properties": {
                 "order_items": {
@@ -1176,9 +1210,6 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/requests.OrderItemRequest"
                     }
-                },
-                "table_id": {
-                    "type": "string"
                 }
             }
         },
