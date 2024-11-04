@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/cs471-buffetpos/buffet-pos-backend/configs"
 	"github.com/cs471-buffetpos/buffet-pos-backend/domain/exceptions"
@@ -22,14 +23,18 @@ type TableUseCase interface {
 }
 
 type tableService struct {
-	tableRepo repositories.TableRepository
-	config    *configs.Config
+	tableRepo   repositories.TableRepository
+	invoiceRepo repositories.InvoiceRepository
+	settingRepo repositories.SettingRepository
+	config      *configs.Config
 }
 
-func NewTableService(tableRepo repositories.TableRepository, config *configs.Config) TableUseCase {
+func NewTableService(tableRepo repositories.TableRepository, invoiceRepo repositories.InvoiceRepository, settingRepo repositories.SettingRepository, config *configs.Config) TableUseCase {
 	return &tableService{
-		tableRepo: tableRepo,
-		config:    config,
+		tableRepo:   tableRepo,
+		invoiceRepo: invoiceRepo,
+		settingRepo: settingRepo,
+		config:      config,
 	}
 }
 
@@ -143,20 +148,33 @@ func (t *tableService) AssignTable(ctx context.Context, req *requests.AssignTabl
 	if table == nil {
 		return nil, exceptions.ErrTableNotFound
 	}
+	if !table.IsAvailable {
+		return nil, exceptions.ErrTableAlreadyAssigned
+	}
 	tableID := table.ID.String()
 
 	accessCode, _ := uuid.NewV7()
 	accessCodeStr := accessCode.String()
 
-	qrcode := t.config.FrontendURL + "/user/" + accessCode.String()
-
-	table.IsAvailable = false
-	table.QRCode = &qrcode
-	table.AccessCode = &accessCodeStr
+	qrcode := t.config.FrontendURL + "/user/" + accessCodeStr
 
 	if err := t.tableRepo.Assign(ctx, tableID, accessCode.String(), qrcode); err != nil {
 		return nil, err
 	}
+
+	pricePerPerson, err := t.settingRepo.GetSetting(ctx, "pricePerPerson")
+	if err != nil {
+		return nil, err
+	}
+
+	pricePerPersonFloat, _ := strconv.ParseFloat(pricePerPerson.Value, 64)
+
+	totalPrice := float64(req.PeopleAmount) * pricePerPersonFloat
+	if err := t.invoiceRepo.Create(ctx, tableID, totalPrice, req.PeopleAmount); err != nil {
+		return nil, err
+	}
+
+	table, err = t.tableRepo.FindByID(ctx, tableID)
 
 	return &responses.TableDetail{
 		BaseTable: responses.BaseTable{

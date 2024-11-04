@@ -27,12 +27,18 @@ func main() {
 
 	cld := cloudinary.NewCloudinaryStorageService(cfg)
 
+	settingRepo := gorm.NewSettingGormRepository(db)
+	settingService := usecases.NewSettingService(settingRepo, cfg)
+	settingHandler := rest.NewSettingHandler(settingService)
+
+	invoiceRepo := gorm.NewInvoiceGormRepository(db)
+
 	userRepo := gorm.NewUserGormRepository(db)
 	userService := usecases.NewUserService(userRepo, cfg)
 	userHandler := rest.NewUserHandler(userService)
 
 	tableRepo := gorm.NewTableGormRepository(db)
-	tableService := usecases.NewTableService(tableRepo, cfg)
+	tableService := usecases.NewTableService(tableRepo, invoiceRepo, settingRepo, cfg)
 	tableHandler := rest.NewTableHandler(tableService)
 
 	categoryRepo := gorm.NewCategoryGormRepository(db)
@@ -47,10 +53,6 @@ func main() {
 	orderItemRepo := gorm.NewOrderItemGormRepository(db)
 	orderService := usecases.NewOrderService(orderRepo, orderItemRepo, cfg)
 	orderHandler := rest.NewOrderHandler(orderService)
-
-	settingRepo := gorm.NewSettingGormRepository(db)
-	settingService := usecases.NewSettingService(settingRepo, cfg)
-	settingHandler := rest.NewSettingHandler(settingService)
 
 	app.Use(cors.New())
 

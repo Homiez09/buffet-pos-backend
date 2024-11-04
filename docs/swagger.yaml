@@ -48,8 +48,11 @@ definitions:
     properties:
       id:
         type: string
+      peopleAmount:
+        type: integer
     required:
     - id
+    - peopleAmount
     type: object
   requests.EditPricePerPerson:
     properties:
