@@ -78,3 +78,13 @@ func (i *InvoiceGormRepository) GetAllPaid(ctx context.Context) ([]models.Invoic
 	result := i.DB.Where("is_paid = ?", true).Find(&invoices)
 	return invoices, result.Error
 }
+
+func (i *InvoiceGormRepository) GetByTableID(ctx context.Context, tableID string) (*models.Invoice, error) {
+	tableIDParse, err := uuid.Parse(tableID)
+	if err != nil {
+		return nil, err
+	}
+	invoice := &models.Invoice{}
+	result := i.DB.Where("table_id = ?", tableIDParse).Order("created_at desc").First(invoice)
+	return invoice, result.Error
+}

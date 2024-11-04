@@ -118,6 +118,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/customer/invoices": {
+            "get": {
+                "description": "Get invoice by table ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customer"
+                ],
+                "summary": "Get Invoice",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access Code",
+                        "name": "AccessCode",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InvoiceDetail"
+                        }
+                    }
+                }
+            }
+        },
         "/customer/menus": {
             "get": {
                 "description": "Find all menus.",

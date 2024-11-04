@@ -76,6 +76,7 @@ func main() {
 	customer.Get("/orders/history", orderHandler.CustomerGetOrderHistory)
 	customer.Get("/tables", tableHandler.FindCustomerTable)
 	customer.Get("/categories", categoryHandler.FindAllCategories)
+	customer.Get("/invoices", invoiceHandler.CustomerGetInvoice)
 
 	manage := app.Group("/manage", middleware.AuthMiddleware(cfg), middleware.RoleMiddleware(models.Employee, models.Manager))
 	manage.Get("/tables", tableHandler.FindAllTables)

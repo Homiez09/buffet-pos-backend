@@ -13,4 +13,5 @@ type InvoiceRepository interface {
 	Cancel(ctx context.Context, invoiceID string) error
 	GetAllUnpaid(ctx context.Context) ([]models.Invoice, error)
 	GetAllPaid(ctx context.Context) ([]models.Invoice, error)
+	GetByTableID(ctx context.Context, tableID string) (*models.Invoice, error)
 }
