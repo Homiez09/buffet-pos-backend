@@ -72,3 +72,9 @@ func (i *InvoiceGormRepository) GetAllUnpaid(ctx context.Context) ([]models.Invo
 	result := i.DB.Where("is_paid = ?", false).Find(&invoices)
 	return invoices, result.Error
 }
+
+func (i *InvoiceGormRepository) GetAllPaid(ctx context.Context) ([]models.Invoice, error) {
+	var invoices []models.Invoice
+	result := i.DB.Where("is_paid = ?", true).Find(&invoices)
+	return invoices, result.Error
+}
