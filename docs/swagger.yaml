@@ -1,4 +1,27 @@
 definitions:
+  models.OrderItem:
+    properties:
+      id:
+        type: string
+      menuID:
+        type: string
+      orderID:
+        type: string
+      quantity:
+        type: integer
+    type: object
+  models.OrderStatus:
+    enum:
+    - preparing
+    - served
+    - succeeded
+    - cancelled
+    type: string
+    x-enum-varnames:
+    - PREPARING
+    - SERVED
+    - SUCCEEDED
+    - CANCELLED
   models.Role:
     enum:
     - manager
@@ -37,6 +60,38 @@ definitions:
     required:
     - id
     - tableName
+    type: object
+  requests.OrderItemRequest:
+    properties:
+      menu_id:
+        type: string
+      quantity:
+        type: integer
+    required:
+    - menu_id
+    - quantity
+    type: object
+  requests.UpdateOrderStatusRequest:
+    properties:
+      status:
+        type: string
+      table_id:
+        type: string
+    required:
+    - status
+    - table_id
+    type: object
+  requests.UserAddOrderRequest:
+    properties:
+      order_items:
+        items:
+          $ref: '#/definitions/requests.OrderItemRequest'
+        type: array
+      table_id:
+        type: string
+    required:
+    - order_items
+    - table_id
     type: object
   requests.UserLoginRequest:
     properties:
@@ -85,6 +140,23 @@ definitions:
       isAvailable:
         type: boolean
       name:
+        type: string
+    type: object
+  responses.OrderDetail:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      orderItem:
+        items:
+          $ref: '#/definitions/models.OrderItem'
+        type: array
+      status:
+        $ref: '#/definitions/models.OrderStatus'
+      tableId:
+        type: string
+      updatedAt:
         type: string
     type: object
   responses.SettingResponse:
@@ -184,6 +256,33 @@ paths:
       summary: User register (Employee Role by default)
       tags:
       - User
+  /customer/orders:
+    post:
+      consumes:
+      - application/json
+      description: Add order to table.
+      parameters:
+      - description: User Add Order Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.UserAddOrderRequest'
+      - description: Access Code
+        in: header
+        name: AccessCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+      summary: Add Order
+      tags:
+      - Customer
   /manage/categories:
     get:
       consumes:
@@ -449,6 +548,95 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Find Menu By ID
+      tags:
+      - Manage
+  /manage/orders/status:
+    put:
+      consumes:
+      - application/json
+      description: Update order status.
+      parameters:
+      - description: Update Order Status Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.UpdateOrderStatusRequest'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Order Status
+      tags:
+      - Manage
+  /manage/orders/status/:status:
+    get:
+      consumes:
+      - application/json
+      description: Get orders by status.
+      parameters:
+      - description: Order Status
+        in: path
+        name: status
+        required: true
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/responses.OrderDetail'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get Orders By Status
+      tags:
+      - Manage
+  /manage/orders/table/:tableID:
+    get:
+      consumes:
+      - application/json
+      description: Get orders by table ID.
+      parameters:
+      - description: Table ID
+        in: path
+        name: tableID
+        required: true
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/responses.OrderDetail'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get Orders By Table ID
       tags:
       - Manage
   /manage/settings/price-per-person:

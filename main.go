@@ -43,6 +43,11 @@ func main() {
 	menuService := usecases.NewMenuService(menuRepo, cfg, cld)
 	menuHandler := rest.NewMenuHandler(menuService)
 
+	orderRepo := gorm.NewOrderGormRepository(db)
+	orderItemRepo := gorm.NewOrderItemGormRepository(db)
+	orderService := usecases.NewOrderService(orderRepo, orderItemRepo, cfg)
+	orderHandler := rest.NewOrderHandler(orderService)
+
 	settingRepo := gorm.NewSettingGormRepository(db)
 	settingService := usecases.NewSettingService(settingRepo, cfg)
 	settingHandler := rest.NewSettingHandler(settingService)
@@ -58,6 +63,9 @@ func main() {
 	auth := app.Group("/auth")
 	auth.Post("/register", userHandler.Register)
 	auth.Post("/login", userHandler.Login)
+
+	customer := app.Group("/customer", middleware.CustomerMiddleware(cfg, tableService))
+	customer.Post("/orders", orderHandler.CreateOrder)
 
 	manage := app.Group("/manage", middleware.AuthMiddleware(cfg), middleware.RoleMiddleware(models.Employee, models.Manager))
 	manage.Get("/tables", tableHandler.FindAllTables)
@@ -76,6 +84,10 @@ func main() {
 	manage.Post("/menus", menuHandler.Create)
 	manage.Put("/menus", menuHandler.Edit)
 	manage.Delete("/menus/:id", menuHandler.Delete)
+
+	manage.Get("/orders/status/:status", orderHandler.GetOrdersByStatus)
+	manage.Get("/orders/table/:tableID", orderHandler.GetOrdersByTableID)
+	manage.Put("/orders/status", orderHandler.UpdateOrderStatus)
 
 	manage.Get("/settings/price-per-person", settingHandler.GetPricePerPerson)
 	manage.Put("/settings/price-per-person", settingHandler.SetPricePerPerson)
