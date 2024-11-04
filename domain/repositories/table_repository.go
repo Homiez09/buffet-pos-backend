@@ -14,4 +14,5 @@ type TableRepository interface {
 	FindByID(ctx context.Context, email string) (*models.Table, error)
 	FindByName(ctx context.Context, name string) (*models.Table, error)
 	Delete(ctx context.Context, id string) error
+	FindByAccessCode(ctx context.Context, accessCode string) (*models.Table, error)
 }

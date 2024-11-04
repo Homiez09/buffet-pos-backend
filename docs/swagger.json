@@ -75,6 +75,47 @@
                 }
             }
         },
+        "/customer/orders": {
+            "post": {
+                "description": "Add order to table.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customer"
+                ],
+                "summary": "Add Order",
+                "parameters": [
+                    {
+                        "description": "User Add Order Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.UserAddOrderRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Access Code",
+                        "name": "AccessCode",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/manage/categories": {
             "get": {
                 "security": [
@@ -496,6 +537,146 @@
                 }
             }
         },
+        "/manage/orders/status": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update order status.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manage"
+                ],
+                "summary": "Update Order Status",
+                "parameters": [
+                    {
+                        "description": "Update Order Status Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.UpdateOrderStatusRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/manage/orders/status/:status": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get orders by status.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manage"
+                ],
+                "summary": "Get Orders By Status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order Status",
+                        "name": "status",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.OrderDetail"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/manage/orders/table/:tableID": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get orders by table ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manage"
+                ],
+                "summary": "Get Orders By Table ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Table ID",
+                        "name": "tableID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.OrderDetail"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/manage/settings/price-per-person": {
             "get": {
                 "security": [
@@ -793,6 +974,38 @@
         }
     },
     "definitions": {
+        "models.OrderItem": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "menuID": {
+                    "type": "string"
+                },
+                "orderID": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.OrderStatus": {
+            "type": "string",
+            "enum": [
+                "preparing",
+                "served",
+                "succeeded",
+                "cancelled"
+            ],
+            "x-enum-varnames": [
+                "PREPARING",
+                "SERVED",
+                "SUCCEEDED",
+                "CANCELLED"
+            ]
+        },
         "models.Role": {
             "type": "string",
             "enum": [
@@ -848,6 +1061,54 @@
                     "type": "string"
                 },
                 "tableName": {
+                    "type": "string"
+                }
+            }
+        },
+        "requests.OrderItemRequest": {
+            "type": "object",
+            "required": [
+                "menu_id",
+                "quantity"
+            ],
+            "properties": {
+                "menu_id": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "requests.UpdateOrderStatusRequest": {
+            "type": "object",
+            "required": [
+                "status",
+                "table_id"
+            ],
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "table_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "requests.UserAddOrderRequest": {
+            "type": "object",
+            "required": [
+                "order_items",
+                "table_id"
+            ],
+            "properties": {
+                "order_items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/requests.OrderItemRequest"
+                    }
+                },
+                "table_id": {
                     "type": "string"
                 }
             }
@@ -922,6 +1183,32 @@
                     "type": "boolean"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.OrderDetail": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "orderItem": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.OrderItem"
+                    }
+                },
+                "status": {
+                    "$ref": "#/definitions/models.OrderStatus"
+                },
+                "tableId": {
+                    "type": "string"
+                },
+                "updatedAt": {
                     "type": "string"
                 }
             }

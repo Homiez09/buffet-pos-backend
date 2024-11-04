@@ -99,3 +99,15 @@ func (t *TableGormRepository) Delete(ctx context.Context, tableID string) error 
 	result := t.DB.Delete(table)
 	return result.Error
 }
+
+func (t *TableGormRepository) FindByAccessCode(ctx context.Context, accessCode string) (*models.Table, error) {
+	var table models.Table
+	result := t.DB.Where("access_code = ?", accessCode).First(&table)
+	if result.Error == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &table, nil
+}

@@ -16,6 +16,7 @@ type TableUseCase interface {
 	FindTableByID(ctx context.Context, tableID string) (*responses.TableDetail, error)
 	EditTable(ctx context.Context, req *requests.EditTableRequest) error
 	DeleteTable(ctx context.Context, tableID string) error
+	FindByAccessCode(ctx context.Context, accessCode string) (*responses.TableDetail, error)
 }
 
 type tableService struct {
@@ -109,4 +110,25 @@ func (t *tableService) DeleteTable(ctx context.Context, tableID string) error {
 		return exceptions.ErrTableNotFound
 	}
 	return t.tableRepo.Delete(ctx, tableID)
+}
+
+func (t *tableService) FindByAccessCode(ctx context.Context, accessCode string) (*responses.TableDetail, error) {
+	table, err := t.tableRepo.FindByAccessCode(ctx, accessCode)
+	if err != nil {
+		return nil, err
+	}
+	if table == nil {
+		return nil, exceptions.ErrTableNotFound
+	}
+	return &responses.TableDetail{
+		BaseTable: responses.BaseTable{
+			ID:          table.ID,
+			TableName:   table.TableName,
+			IsAvailable: table.IsAvailable,
+			QRCode:      table.QRCode,
+			AccessCode:  table.AccessCode,
+			CreatedAt:   table.CreatedAt,
+			UpdatedAt:   table.UpdatedAt,
+		},
+	}, nil
 }
