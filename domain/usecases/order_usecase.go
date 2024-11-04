@@ -33,7 +33,8 @@ func (s *OrderService) GetOrdersByStatus(status string) ([]responses.OrderDetail
 	if err != nil {
 		return nil, err
 	}
-	var orderDetails []responses.OrderDetail
+
+	orderDetails := make([]responses.OrderDetail, 0)
 	for _, order := range orders {
 		orderDetails = append(orderDetails, responses.OrderDetail{
 			BaseOrder: responses.BaseOrder{
@@ -54,7 +55,7 @@ func (s *OrderService) GetOrdersByTableID(tableID string) ([]responses.OrderDeta
 	if err != nil {
 		return nil, err
 	}
-	var orderDetails []responses.OrderDetail
+	orderDetails := make([]responses.OrderDetail, 0)
 	for _, order := range orders {
 		orderDetails = append(orderDetails, responses.OrderDetail{
 			BaseOrder: responses.BaseOrder{
