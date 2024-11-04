@@ -265,6 +265,29 @@ paths:
       summary: User register (Employee Role by default)
       tags:
       - User
+  /customer/categories:
+    get:
+      consumes:
+      - application/json
+      description: Get all categories.
+      parameters:
+      - description: Access Code
+        in: header
+        name: AccessCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/responses.CategoryDetail'
+            type: array
+      summary: Get All Categories
+      tags:
+      - Customer
   /customer/menus:
     get:
       consumes:
