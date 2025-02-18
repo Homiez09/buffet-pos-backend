@@ -57,6 +57,11 @@ func main() {
 	orderService := usecases.NewOrderService(orderRepo, orderItemRepo, menuRepo, cfg)
 	orderHandler := rest.NewOrderHandler(orderService)
 
+	customerRepo := gorm.NewCustomerGormRepository(db)
+	customerService := usecases.NewCustomerService(customerRepo, settingRepo, cfg)
+	customerHandler := rest.NewCustomerHandler(customerService)
+
+
 	app.Use(cors.New())
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
@@ -77,6 +82,12 @@ func main() {
 	customer.Get("/tables", tableHandler.FindCustomerTable)
 	customer.Get("/categories", categoryHandler.FindAllCategories)
 	customer.Get("/invoices", invoiceHandler.CustomerGetInvoice)
+	// Customer point
+	customer.Post("/register", customerHandler.Register)
+	customer.Get("/customers", customerHandler.FindAll)
+	customer.Post("/add-point", customerHandler.AddPoint)
+	customer.Post("/redeem", customerHandler.RedeemPoint)
+	customer.Delete("/customer/:id", customerHandler.Delete)
 
 	manage := app.Group("/manage", middleware.AuthMiddleware(cfg), middleware.RoleMiddleware(models.Employee, models.Manager))
 	manage.Get("/tables", tableHandler.FindAllTables)
