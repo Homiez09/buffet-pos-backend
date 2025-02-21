@@ -120,6 +120,10 @@ func main() {
 
 	manage.Get("/settings/price-per-person", settingHandler.GetPricePerPerson)
 	manage.Put("/settings/price-per-person", settingHandler.SetPricePerPerson)
+	manage.Get("/settings/limit-point", settingHandler.GetLimitPoint)
+	manage.Put("/settings/limit-point", settingHandler.SetLimitPoint)
+	manage.Get("/settings/use-point-per-person", settingHandler.GetUsePointPerPerson)
+	manage.Put("/settings/use-point-per-person", settingHandler.SetUsePointPerPerson)
 
 	app.Listen(":3001")
 }
