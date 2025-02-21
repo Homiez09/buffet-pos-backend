@@ -332,47 +332,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/loyalty/customers": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Find all customers",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Loyalty"
-                ],
-                "summary": "Find All Customer",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Authorization",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/responses.BaseCustomer"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/loyalty/customers/points": {
+        "/loyalty/add-point": {
             "post": {
                 "security": [
                     {
@@ -418,7 +378,47 @@ const docTemplate = `{
                 }
             }
         },
-        "/loyalty/customers/redeem": {
+        "/loyalty/customers": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Find all customers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Loyalty"
+                ],
+                "summary": "Find All Customer",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.BaseCustomer"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/loyalty/redeem": {
             "post": {
                 "security": [
                     {
@@ -464,7 +464,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/loyalty/customers/register": {
+        "/loyalty/register": {
             "post": {
                 "security": [
                     {
@@ -510,7 +510,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/loyalty/customers/{id}": {
+        "/loyalty/{id}": {
             "delete": {
                 "security": [
                     {
@@ -1730,10 +1730,14 @@ const docTemplate = `{
         "requests.CustomerRedeemRequest": {
             "type": "object",
             "required": [
+                "invoice_id",
                 "phone",
                 "pin"
             ],
             "properties": {
+                "invoice_id": {
+                    "type": "string"
+                },
                 "phone": {
                     "type": "string"
                 },

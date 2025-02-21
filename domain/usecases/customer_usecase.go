@@ -106,7 +106,14 @@ func (c *customerService) RedeemPoint(ctx context.Context, req *requests.Custome
 		return nil, exceptions.ErrNotEnoughPoints
 	}
 
-	return c.customerRepo.RedeemPoint(ctx, req, usePointPerPerson)	
+	settingPricePerPerson, err := c.settingRepo.GetSetting(ctx, "pricePerPerson")
+	if err != nil {
+		return nil, exceptions.ErrSettingNotFound
+	}
+	
+	pricePerPerson, _ := strconv.ParseFloat(settingPricePerPerson.Value, 64)
+
+	return c.customerRepo.RedeemPoint(ctx, req, usePointPerPerson, pricePerPerson)	
 }
 
 func (c *customerService) DeleteCustomer(ctx context.Context, customerID string) error {

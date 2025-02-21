@@ -54,7 +54,7 @@ func (m *customerHandler) FindAll(c *fiber.Ctx) error {
 // @Produce json
 // @Param request body requests.CustomerAddPointRequest true "Add Point Request"
 // @Success 200 {object} responses.BaseCustomer
-// @Router /loyalty/customers/points [post]
+// @Router /loyalty/add-point [post]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (m *customerHandler) AddPoint(c *fiber.Ctx) error {
@@ -109,7 +109,7 @@ func (m *customerHandler) AddPoint(c *fiber.Ctx) error {
 // @Produce json
 // @Param request body requests.CustomerRedeemRequest true "Redeem Point Request"
 // @Success 200 {object} responses.BaseCustomer
-// @Router /loyalty/customers/redeem [post]
+// @Router /loyalty/redeem [post]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (m *customerHandler) RedeemPoint(c *fiber.Ctx) error {
@@ -153,6 +153,7 @@ func (m *customerHandler) RedeemPoint(c *fiber.Ctx) error {
 }
 
 // Register a New Customer
+
 // @Summary Register a New Customer
 // @Description Register a new customer in the system
 // @Tags Loyalty
@@ -160,7 +161,7 @@ func (m *customerHandler) RedeemPoint(c *fiber.Ctx) error {
 // @Produce json
 // @Param request body requests.CustomerRegisterRequest true "Register Request"
 // @Success 200 {object} responses.SuccessResponse
-// @Router /loyalty/customers/register [post]
+// @Router /loyalty/register [post]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (m *customerHandler) Register(c *fiber.Ctx) error {
@@ -204,7 +205,7 @@ func (m *customerHandler) Register(c *fiber.Ctx) error {
 // @Produce json
 // @Param id path string true "Customer ID"
 // @Success 200 {object} responses.SuccessResponse
-// @Router /loyalty/customers/{id} [delete]
+// @Router /loyalty/{id} [delete]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (m *customerHandler) Delete(c *fiber.Ctx) error {

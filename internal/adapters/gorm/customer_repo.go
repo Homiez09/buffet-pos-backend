@@ -99,9 +99,9 @@ func (c *CustomerGormRepository) AddPoint(ctx context.Context, req *requests.Cus
 	}, nil
 }
 
-func (c *CustomerGormRepository) RedeemPoint(ctx context.Context, req *requests.CustomerRedeemRequest, usePoint int) (*responses.BaseCustomer, error) {
+func (c *CustomerGormRepository) RedeemPoint(ctx context.Context, req *requests.CustomerRedeemRequest, usePoint int, priceDiscount float64) (*responses.BaseCustomer, error) {
 	var customer models.Customer
-	result := c.DB.Where("phone = ?",req.Phone).First(&customer)
+	result := c.DB.Where("phone = ?", req.Phone).First(&customer)
 	if result.Error == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
@@ -113,8 +113,26 @@ func (c *CustomerGormRepository) RedeemPoint(ctx context.Context, req *requests.
 		return nil, exceptions.ErrNotEnoughPoints
 	}
 
+	// ลดคะแนนของลูกค้า
 	customer.Point -= usePoint
 	if err := c.DB.Save(&customer).Error; err != nil {
+		return nil, err
+	}
+
+	// ดึงข้อมูล Invoice ตาม InvoiceID ที่ได้รับ
+	var invoice models.Invoice // สมมติว่าเรามีโมเดล Invoice
+	invoiceID, err := uuid.Parse(req.InvoiceID)
+	if err != nil {
+		return nil, err
+	}
+	if err := c.DB.Where("id = ?", invoiceID).First(&invoice).Error; err != nil {
+		return nil, err 
+	}
+
+	// ตั้งค่า totalPrice ใน Invoice
+	totalPrice := invoice.TotalPrice
+	invoice.TotalPrice = totalPrice - priceDiscount 
+	if err := c.DB.Save(&invoice).Error; err != nil {
 		return nil, err
 	}
 
@@ -124,6 +142,7 @@ func (c *CustomerGormRepository) RedeemPoint(ctx context.Context, req *requests.
 		Point: customer.Point,
 	}, nil
 }
+
 
 func (c *CustomerGormRepository) Delete(ctx context.Context, customerID string) error {
 	result := c.DB.Where("id = ?",customerID).Delete(&models.Customer{})
