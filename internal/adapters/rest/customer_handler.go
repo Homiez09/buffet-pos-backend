@@ -26,6 +26,16 @@ func NewCustomerHandler(service usecases.CustomerUseCase) CustomerHandler {
 	}
 }
 
+// Find All Customer
+// @Summary Find All Customer
+// @Description Find all customers
+// @Tags Loyalty
+// @Accept json
+// @Produce json
+// @Success 200 {array} responses.BaseCustomer
+// @Router /loyalty/customers [get]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func (m *customerHandler) FindAll(c *fiber.Ctx) error {
 	customers, err := m.service.FindAll(c.Context())
 	if err != nil {
@@ -36,6 +46,17 @@ func (m *customerHandler) FindAll(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(customers)
 }
 
+// Add Points to Customer
+// @Summary Add Points to Customer
+// @Description Add points to a customer's account
+// @Tags Loyalty
+// @Accept json
+// @Produce json
+// @Param request body requests.CustomerAddPointRequest true "Add Point Request"
+// @Success 200 {object} responses.BaseCustomer
+// @Router /loyalty/customers/points [post]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func (m *customerHandler) AddPoint(c *fiber.Ctx) error {
 	// Parse request
 	var req *requests.CustomerAddPointRequest
@@ -80,6 +101,17 @@ func (m *customerHandler) AddPoint(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(customer)
 }
 
+// Redeem Points from Customer
+// @Summary Redeem Points from Customer
+// @Description Redeem points from a customer's account
+// @Tags Loyalty
+// @Accept json
+// @Produce json
+// @Param request body requests.CustomerRedeemRequest true "Redeem Point Request"
+// @Success 200 {object} responses.BaseCustomer
+// @Router /loyalty/customers/redeem [post]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func (m *customerHandler) RedeemPoint(c *fiber.Ctx) error {
 	// Parse request
 	var req *requests.CustomerRedeemRequest
@@ -120,6 +152,17 @@ func (m *customerHandler) RedeemPoint(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(customer)
 }
 
+// Register a New Customer
+// @Summary Register a New Customer
+// @Description Register a new customer in the system
+// @Tags Loyalty
+// @Accept json
+// @Produce json
+// @Param request body requests.CustomerRegisterRequest true "Register Request"
+// @Success 200 {object} responses.SuccessResponse
+// @Router /loyalty/customers/register [post]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func (m *customerHandler) Register(c *fiber.Ctx) error {
 	// Parse request
 	var req *requests.CustomerRegisterRequest
@@ -153,6 +196,17 @@ func (m *customerHandler) Register(c *fiber.Ctx) error {
 	})
 }
 
+// Delete a Customer
+// @Summary Delete a Customer
+// @Description Delete a customer by their ID
+// @Tags Loyalty
+// @Accept json
+// @Produce json
+// @Param id path string true "Customer ID"
+// @Success 200 {object} responses.SuccessResponse
+// @Router /loyalty/customers/{id} [delete]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func (m *customerHandler) Delete(c *fiber.Ctx) error {
 	id, err := utils.ValidateUUID(c.Params("id"))
 	if err != nil {
