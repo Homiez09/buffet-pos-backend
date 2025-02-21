@@ -82,12 +82,13 @@ func main() {
 	customer.Get("/tables", tableHandler.FindCustomerTable)
 	customer.Get("/categories", categoryHandler.FindAllCategories)
 	customer.Get("/invoices", invoiceHandler.CustomerGetInvoice)
-	// Customer point
-	customer.Post("/register", customerHandler.Register)
-	customer.Get("/customers", customerHandler.FindAll)
-	customer.Post("/add-point", customerHandler.AddPoint)
-	customer.Post("/redeem", customerHandler.RedeemPoint)
-	customer.Delete("/customer/:id", customerHandler.Delete)
+
+	loyalty := app.Group("/loyalty", middleware.AuthMiddleware(cfg), middleware.RoleMiddleware(models.Employee, models.Manager))
+	loyalty.Post("/register", customerHandler.Register)
+	loyalty.Get("/customers", customerHandler.FindAll)
+	loyalty.Post("/add-point", customerHandler.AddPoint)
+	loyalty.Post("/redeem", customerHandler.RedeemPoint)
+	loyalty.Delete("/customer/:id", customerHandler.Delete)
 
 	manage := app.Group("/manage", middleware.AuthMiddleware(cfg), middleware.RoleMiddleware(models.Employee, models.Manager))
 	manage.Get("/tables", tableHandler.FindAllTables)
@@ -120,5 +121,5 @@ func main() {
 	manage.Get("/settings/price-per-person", settingHandler.GetPricePerPerson)
 	manage.Put("/settings/price-per-person", settingHandler.SetPricePerPerson)
 
-	app.Listen(":3000")
+	app.Listen(":3001")
 }
