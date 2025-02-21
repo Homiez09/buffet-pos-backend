@@ -90,6 +90,13 @@ definitions:
     - phone
     - pin
     type: object
+  requests.EditPointLimit:
+    properties:
+      limit_point:
+        type: integer
+    required:
+    - limit_point
+    type: object
   requests.EditPricePerPerson:
     properties:
       price:
@@ -106,6 +113,13 @@ definitions:
     required:
     - id
     - tableName
+    type: object
+  requests.EditUsePointPerPerson:
+    properties:
+      use_point_per_person:
+        type: integer
+    required:
+    - use_point_per_person
     type: object
   requests.OrderItemRequest:
     properties:
@@ -1101,6 +1115,57 @@ paths:
       summary: Get Orders By Table ID
       tags:
       - Manage
+  /manage/settings/limit-point:
+    get:
+      consumes:
+      - application/json
+      description: Get limit point in setting.
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SettingResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Limit Point
+      tags:
+      - Manage
+    put:
+      consumes:
+      - application/json
+      description: Update limit point in setting.
+      parameters:
+      - description: Edit Point Limit Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.EditPointLimit'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Set Limit Point
+      tags:
+      - Manage
   /manage/settings/price-per-person:
     get:
       consumes:
@@ -1150,6 +1215,57 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Set Price Per Person
+      tags:
+      - Manage
+  /manage/settings/use-point-per-person:
+    get:
+      consumes:
+      - application/json
+      description: Get use point per person in setting.
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SettingResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Use Point Per Person
+      tags:
+      - Manage
+    put:
+      consumes:
+      - application/json
+      description: Update use point per person in setting.
+      parameters:
+      - description: Edit Use Point Per Person Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.EditUsePointPerPerson'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Set Use Point Per Person
       tags:
       - Manage
   /manage/tables:
