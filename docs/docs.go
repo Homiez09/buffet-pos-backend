@@ -1730,10 +1730,14 @@ const docTemplate = `{
         "requests.CustomerRedeemRequest": {
             "type": "object",
             "required": [
+                "invoice_id",
                 "phone",
                 "pin"
             ],
             "properties": {
+                "invoice_id": {
+                    "type": "string"
+                },
                 "phone": {
                     "type": "string"
                 },

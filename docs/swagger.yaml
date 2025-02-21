@@ -69,11 +69,14 @@ definitions:
     type: object
   requests.CustomerRedeemRequest:
     properties:
+      invoice_id:
+        type: string
       phone:
         type: string
       pin:
         type: string
     required:
+    - invoice_id
     - phone
     - pin
     type: object
