@@ -11,8 +11,6 @@ import (
 type SettingHandler interface {
 	GetPricePerPerson(c *fiber.Ctx) error
 	SetPricePerPerson(c *fiber.Ctx) error
-	GetLimitPoint(c *fiber.Ctx) error
-	SetLimitPoint(c *fiber.Ctx) error
 	GetUsePointPerPerson(c *fiber.Ctx) error
 	SetUsePointPerPerson(c *fiber.Ctx) error
 }
@@ -75,25 +73,6 @@ func (s *settingHandler) SetPricePerPerson(c *fiber.Ctx) error {
 	})
 }
 
-// GetLimitPoint
-// @Summary Get Limit Point
-// @Description Get limit point in setting.
-// @Tags Manage
-// @Accept json
-// @Produce json
-// @Success 200 {object} responses.SettingResponse
-// @Router /manage/settings/limit-point [get]
-// @Security ApiKeyAuth
-// @param Authorization header string true "Authorization"
-func (s *settingHandler) GetLimitPoint(c *fiber.Ctx) error {
-	limitPoint, err := s.service.GetLimitPoint(c.Context())
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
-	}
-	return c.JSON(limitPoint)
-}
 
 // GetUsePointPerPerson
 // @Summary Get Use Point Per Person
@@ -113,34 +92,6 @@ func (s *settingHandler) GetUsePointPerPerson(c *fiber.Ctx) error {
 		})
 	}
 	return c.JSON(usePointPerPerson)
-}
-
-// SetLimitPoint
-// @Summary Set Limit Point
-// @Description Update limit point in setting.
-// @Tags Manage
-// @Accept json
-// @Produce json
-// @Param request body requests.EditPointLimit true "Edit Point Limit Request"
-// @Success 200 {object} responses.SuccessResponse
-// @Router /manage/settings/limit-point [put]
-// @Security ApiKeyAuth
-// @param Authorization header string true "Authorization"
-func (s *settingHandler) SetLimitPoint(c *fiber.Ctx) error {
-	var req requests.EditPointLimit
-	if err := c.BodyParser(&req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Failed to parse request body",
-		})
-	}
-	if err := s.service.SetLimitPoint(c.Context(), fmt.Sprintf("%d", req.LimitPoint)); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
-	}
-	return c.JSON(fiber.Map{
-		"message": "Limit Point updated",
-	})
 }
 
 // SetUsePointPerPerson

@@ -42,10 +42,6 @@ func initializeDefaultSettings(db *gorm.DB) error {
 			Value: "250.00",
 		},
 		{
-			Key: "limitPoint", 
-			Value: "10",
-		},
-		{
 			Key: "usePointPerPerson",
 			Value: "10",
 		},

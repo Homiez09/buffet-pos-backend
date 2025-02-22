@@ -205,7 +205,7 @@ func (m *customerHandler) Register(c *fiber.Ctx) error {
 // @Produce json
 // @Param id path string true "Customer ID"
 // @Success 200 {object} responses.SuccessResponse
-// @Router /loyalty/{id} [delete]
+// @Router /loyalty/customer/{id} [delete]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (m *customerHandler) Delete(c *fiber.Ctx) error {
