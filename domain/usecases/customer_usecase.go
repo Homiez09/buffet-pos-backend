@@ -70,14 +70,6 @@ func (c *customerService) AddPoint(ctx context.Context, req *requests.CustomerAd
 		return nil, exceptions.ErrIncorrectPIN
 	}
 
-	
-	settingPoint, _ := c.settingRepo.GetSetting(ctx, "limitPoint")
-	limitPoint, _ := strconv.Atoi(settingPoint.Value)
-
-	// Check point is limit
-	if customer.Point >= limitPoint {
-		return nil, exceptions.ErrPointLimit
-	}
 	// Check point is positive number
 	if req.Point < 1 {
 		return nil, exceptions.ErrInvalidPoint
