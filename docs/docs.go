@@ -378,6 +378,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/loyalty/customer/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete a customer by their ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Loyalty"
+                ],
+                "summary": "Delete a Customer",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Customer ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/loyalty/customers": {
             "get": {
                 "security": [
@@ -491,50 +535,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/requests.CustomerRegisterRequest"
                         }
-                    },
-                    {
-                        "type": "string",
-                        "description": "Authorization",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.SuccessResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/loyalty/{id}": {
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Delete a customer by their ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Loyalty"
-                ],
-                "summary": "Delete a Customer",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Customer ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
                     },
                     {
                         "type": "string",
@@ -1285,14 +1285,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/manage/settings/limit-point": {
+        "/manage/settings/price-fee-overweight": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get limit point in setting.",
+                "description": "Get price fee overweight in setting.",
                 "consumes": [
                     "application/json"
                 ],
@@ -1302,7 +1302,7 @@ const docTemplate = `{
                 "tags": [
                     "Manage"
                 ],
-                "summary": "Get Limit Point",
+                "summary": "Get Price Fee Overweight",
                 "parameters": [
                     {
                         "type": "string",
@@ -1327,7 +1327,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Update limit point in setting.",
+                "description": "Update price fee overweight in setting.",
                 "consumes": [
                     "application/json"
                 ],
@@ -1337,15 +1337,15 @@ const docTemplate = `{
                 "tags": [
                     "Manage"
                 ],
-                "summary": "Set Limit Point",
+                "summary": "Set Price Fee Overweight",
                 "parameters": [
                     {
-                        "description": "Edit Point Limit Request",
+                        "description": "Edit Price Fee Overweight Request",
                         "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/requests.EditPointLimit"
+                            "$ref": "#/definitions/requests.EditPriceFeeOverWeight"
                         }
                     },
                     {
@@ -1923,14 +1923,14 @@ const docTemplate = `{
                 }
             }
         },
-        "requests.EditPointLimit": {
+        "requests.EditPriceFeeOverWeight": {
             "type": "object",
             "required": [
-                "limit_point"
+                "price_fee_overweight"
             ],
             "properties": {
-                "limit_point": {
-                    "type": "integer"
+                "price_fee_overweight": {
+                    "type": "number"
                 }
             }
         },

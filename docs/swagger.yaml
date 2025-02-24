@@ -90,12 +90,12 @@ definitions:
     - phone
     - pin
     type: object
-  requests.EditPointLimit:
+  requests.EditPriceFeeOverWeight:
     properties:
-      limit_point:
-        type: integer
+      price_fee_overweight:
+        type: number
     required:
-    - limit_point
+    - price_fee_overweight
     type: object
   requests.EditPricePerPerson:
     properties:
@@ -512,34 +512,6 @@ paths:
       summary: Find Customer Table
       tags:
       - Customer
-  /loyalty/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete a customer by their ID
-      parameters:
-      - description: Customer ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Authorization
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.SuccessResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Delete a Customer
-      tags:
-      - Loyalty
   /loyalty/add-point:
     post:
       consumes:
@@ -567,6 +539,34 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Add Points to Customer
+      tags:
+      - Loyalty
+  /loyalty/customer/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a customer by their ID
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a Customer
       tags:
       - Loyalty
   /loyalty/customers:
@@ -1115,11 +1115,11 @@ paths:
       summary: Get Orders By Table ID
       tags:
       - Manage
-  /manage/settings/limit-point:
+  /manage/settings/price-fee-overweight:
     get:
       consumes:
       - application/json
-      description: Get limit point in setting.
+      description: Get price fee overweight in setting.
       parameters:
       - description: Authorization
         in: header
@@ -1135,20 +1135,20 @@ paths:
             $ref: '#/definitions/responses.SettingResponse'
       security:
       - ApiKeyAuth: []
-      summary: Get Limit Point
+      summary: Get Price Fee Overweight
       tags:
       - Manage
     put:
       consumes:
       - application/json
-      description: Update limit point in setting.
+      description: Update price fee overweight in setting.
       parameters:
-      - description: Edit Point Limit Request
+      - description: Edit Price Fee Overweight Request
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/requests.EditPointLimit'
+          $ref: '#/definitions/requests.EditPriceFeeOverWeight'
       - description: Authorization
         in: header
         name: Authorization
@@ -1163,7 +1163,7 @@ paths:
             $ref: '#/definitions/responses.SuccessResponse'
       security:
       - ApiKeyAuth: []
-      summary: Set Limit Point
+      summary: Set Price Fee Overweight
       tags:
       - Manage
   /manage/settings/price-per-person:

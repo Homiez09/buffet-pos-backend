@@ -13,6 +13,8 @@ type SettingHandler interface {
 	SetPricePerPerson(c *fiber.Ctx) error
 	GetUsePointPerPerson(c *fiber.Ctx) error
 	SetUsePointPerPerson(c *fiber.Ctx) error
+	GetPriceFeeOverWeight(c *fiber.Ctx) error
+	SetPriceFeeOverWeight(c *fiber.Ctx) error
 }
 
 type settingHandler struct {
@@ -119,5 +121,53 @@ func (s *settingHandler) SetUsePointPerPerson(c *fiber.Ctx) error {
 	}
 	return c.JSON(fiber.Map{
 		"message": "Use Point Per Person updated",
+	})
+}
+
+// GetPriceFeeOverWeight
+// @Summary Get Price Fee Overweight
+// @Description Get price fee overweight in setting.
+// @Tags Manage
+// @Accept json
+// @Produce json
+// @Success 200 {object} responses.SettingResponse
+// @Router /manage/settings/price-fee-overweight [get]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
+func (s *settingHandler) GetPriceFeeOverWeight(c *fiber.Ctx) error {
+	usePointPerPerson, err := s.service.GetPriceFeeOverWeight(c.Context())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+	return c.JSON(usePointPerPerson)
+}
+
+// SetPriceFeeOverWeight
+// @Summary Set Price Fee Overweight
+// @Description Update price fee overweight in setting.
+// @Tags Manage
+// @Accept json
+// @Produce json
+// @Param request body requests.EditPriceFeeOverWeight true "Edit Price Fee Overweight Request"
+// @Success 200 {object} responses.SuccessResponse
+// @Router /manage/settings/price-fee-overweight [put]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
+func (s *settingHandler) SetPriceFeeOverWeight(c *fiber.Ctx) error {
+	var req requests.EditPriceFeeOverWeight
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Failed to parse request body",
+		})
+	}
+	if err := s.service.SetPriceFeeOverWeight(c.Context(), fmt.Sprintf("%f", req.PriceFeeOverWeight)); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+	return c.JSON(fiber.Map{
+		"message": "Price Fee Overweight is updated",
 	})
 }

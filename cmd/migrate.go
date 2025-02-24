@@ -45,6 +45,10 @@ func initializeDefaultSettings(db *gorm.DB) error {
 			Key: "usePointPerPerson",
 			Value: "10",
 		},
+		{
+			Key: "priceFeeOverWeight",
+			Value : "100",
+		},	
 	}
 
 	for _, setting := range settings {
