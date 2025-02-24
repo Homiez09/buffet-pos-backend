@@ -1285,14 +1285,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/manage/settings/price-fee-overweight": {
+        "/manage/settings/price-fee-food-overweight": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get price fee overweight in setting.",
+                "description": "Get price fee food overweight in setting.",
                 "consumes": [
                     "application/json"
                 ],
@@ -1302,7 +1302,7 @@ const docTemplate = `{
                 "tags": [
                     "Manage"
                 ],
-                "summary": "Get Price Fee Overweight",
+                "summary": "Get Price Fee Food Overweight",
                 "parameters": [
                     {
                         "type": "string",
@@ -1337,15 +1337,15 @@ const docTemplate = `{
                 "tags": [
                     "Manage"
                 ],
-                "summary": "Set Price Fee Overweight",
+                "summary": "Set Price Fee Food Overweight",
                 "parameters": [
                     {
-                        "description": "Edit Price Fee Overweight Request",
+                        "description": "Edit Price Fee Food Overweight Request",
                         "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/requests.EditPriceFeeOverWeight"
+                            "$ref": "#/definitions/requests.EditPriceFeeFoodOverWeight"
                         }
                     },
                     {
@@ -1923,13 +1923,13 @@ const docTemplate = `{
                 }
             }
         },
-        "requests.EditPriceFeeOverWeight": {
+        "requests.EditPriceFeeFoodOverWeight": {
             "type": "object",
             "required": [
-                "price_fee_overweight"
+                "price_fee_food_overweight"
             ],
             "properties": {
-                "price_fee_overweight": {
+                "price_fee_food_overweight": {
                     "type": "number"
                 }
             }

@@ -14,8 +14,8 @@ type SettingUseCase interface {
 	SetPricePerPerson(ctx context.Context, value string) error
 	GetUsePointPerPerson(ctx context.Context) (responses.SettingResponse, error)
 	SetUsePointPerPerson(ctx context.Context, value string) error
-	GetPriceFeeOverWeight(ctx context.Context) (responses.SettingResponse, error)
-	SetPriceFeeOverWeight(ctx context.Context, value string) error
+	GetPriceFeeFoodOverWeight(ctx context.Context) (responses.SettingResponse, error)
+	SetPriceFeeFoodOverWeight(ctx context.Context, value string) error
 }
 
 type SettingService struct {
@@ -68,8 +68,8 @@ func (s *SettingService) SetUsePointPerPerson(ctx context.Context, value string)
 	return s.settingRepo.UpdateSetting(ctx, "usePointPerPerson", value)
 }
 
-func (s *SettingService) GetPriceFeeOverWeight(ctx context.Context) (responses.SettingResponse, error) {
-	setting, err := s.settingRepo.GetSetting(ctx, "priceFeeOverWeight")
+func (s *SettingService) GetPriceFeeFoodOverWeight(ctx context.Context) (responses.SettingResponse, error) {
+	setting, err := s.settingRepo.GetSetting(ctx, "priceFeeFoodOverWeight")
 	if err != nil {
 		return responses.SettingResponse{}, err
 	}
@@ -80,9 +80,9 @@ func (s *SettingService) GetPriceFeeOverWeight(ctx context.Context) (responses.S
 	}, nil
 }
 
-func (s *SettingService) SetPriceFeeOverWeight(ctx context.Context, value string) error {
+func (s *SettingService) SetPriceFeeFoodOverWeight(ctx context.Context, value string) error {
 	if err := utils.ValidatePrice(value); err != nil {
 		return err
 	}
-	return s.settingRepo.UpdateSetting(ctx, "priceFeeOverWeight", value)
+	return s.settingRepo.UpdateSetting(ctx, "priceFeeFoodOverWeight", value)
 }

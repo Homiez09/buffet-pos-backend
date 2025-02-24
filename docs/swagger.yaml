@@ -90,12 +90,12 @@ definitions:
     - phone
     - pin
     type: object
-  requests.EditPriceFeeOverWeight:
+  requests.EditPriceFeeFoodOverWeight:
     properties:
-      price_fee_overweight:
+      price_fee_food_overweight:
         type: number
     required:
-    - price_fee_overweight
+    - price_fee_food_overweight
     type: object
   requests.EditPricePerPerson:
     properties:
@@ -1115,11 +1115,11 @@ paths:
       summary: Get Orders By Table ID
       tags:
       - Manage
-  /manage/settings/price-fee-overweight:
+  /manage/settings/price-fee-food-overweight:
     get:
       consumes:
       - application/json
-      description: Get price fee overweight in setting.
+      description: Get price fee food overweight in setting.
       parameters:
       - description: Authorization
         in: header
@@ -1135,7 +1135,7 @@ paths:
             $ref: '#/definitions/responses.SettingResponse'
       security:
       - ApiKeyAuth: []
-      summary: Get Price Fee Overweight
+      summary: Get Price Fee Food Overweight
       tags:
       - Manage
     put:
@@ -1143,12 +1143,12 @@ paths:
       - application/json
       description: Update price fee overweight in setting.
       parameters:
-      - description: Edit Price Fee Overweight Request
+      - description: Edit Price Fee Food Overweight Request
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/requests.EditPriceFeeOverWeight'
+          $ref: '#/definitions/requests.EditPriceFeeFoodOverWeight'
       - description: Authorization
         in: header
         name: Authorization
@@ -1163,7 +1163,7 @@ paths:
             $ref: '#/definitions/responses.SuccessResponse'
       security:
       - ApiKeyAuth: []
-      summary: Set Price Fee Overweight
+      summary: Set Price Fee Food Overweight
       tags:
       - Manage
   /manage/settings/price-per-person:

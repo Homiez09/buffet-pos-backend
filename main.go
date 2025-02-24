@@ -122,8 +122,8 @@ func main() {
 	manage.Put("/settings/price-per-person", settingHandler.SetPricePerPerson)
 	manage.Get("/settings/use-point-per-person", settingHandler.GetUsePointPerPerson)
 	manage.Put("/settings/use-point-per-person", settingHandler.SetUsePointPerPerson)
-	manage.Get("/settings/price-fee-overweight", settingHandler.GetPriceFeeOverWeight)
-	manage.Put("/settings/price-fee-overweight", settingHandler.SetPriceFeeOverWeight)
+	manage.Get("/settings/price-fee-food-overweight", settingHandler.GetPriceFeeFoodOverWeight)
+	manage.Put("/settings/price-fee-food-overweight", settingHandler.SetPriceFeeFoodOverWeight)
 
 	app.Listen(":3001")
 }

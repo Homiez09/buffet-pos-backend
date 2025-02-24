@@ -46,7 +46,7 @@ func initializeDefaultSettings(db *gorm.DB) error {
 			Value: "10",
 		},
 		{
-			Key: "priceFeeOverWeight",
+			Key: "priceFeeFoodOverWeight",
 			Value : "100",
 		},	
 	}
