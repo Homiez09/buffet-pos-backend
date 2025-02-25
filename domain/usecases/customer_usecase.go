@@ -22,13 +22,15 @@ type CustomerUseCase interface {
 
 type customerService struct {
 	customerRepo   repositories.CustomerRepository
+	invoiceRepo    repositories.InvoiceRepository
 	settingRepo    repositories.SettingRepository
 	config         *configs.Config
 }
 
-func NewCustomerService(customerRepo repositories.CustomerRepository, settingRepo repositories.SettingRepository, config *configs.Config) CustomerUseCase {
+func NewCustomerService(customerRepo repositories.CustomerRepository, invoiceRepo repositories.InvoiceRepository, settingRepo repositories.SettingRepository, config *configs.Config) CustomerUseCase {
 	return &customerService{
 		customerRepo:   customerRepo,
+		invoiceRepo: invoiceRepo,
 		settingRepo: 	settingRepo,
 		config:         config,
 	}
@@ -91,9 +93,10 @@ func (c *customerService) RedeemPoint(ctx context.Context, req *requests.Custome
 	}
 	
 
-	// Check point is enough to redeem
+
 	settingPoint, _ := c.settingRepo.GetSetting(ctx, "usePointPerPerson")
 	usePointPerPerson, _ := strconv.Atoi(settingPoint.Value)
+	// Check point is enough to redeem
 	if customer.Point < usePointPerPerson {
 		return nil, exceptions.ErrNotEnoughPoints
 	}
@@ -105,7 +108,19 @@ func (c *customerService) RedeemPoint(ctx context.Context, req *requests.Custome
 	
 	pricePerPerson, _ := strconv.ParseFloat(settingPricePerPerson.Value, 64)
 
-	return c.customerRepo.RedeemPoint(ctx, req, usePointPerPerson, pricePerPerson)	
+	//redeem point
+	result, err := c.customerRepo.RedeemPoint(ctx, req, usePointPerPerson, pricePerPerson)	
+	if err != nil {
+		return nil, err
+	}
+
+	// assign in invoice
+	err = c.invoiceRepo.SetCustomerPhoneByID(ctx, req.InvoiceID, req.Phone)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (c *customerService) DeleteCustomer(ctx context.Context, customerID string) error {

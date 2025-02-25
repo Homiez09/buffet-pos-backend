@@ -88,3 +88,60 @@ func (i *InvoiceGormRepository) GetByTableID(ctx context.Context, tableID string
 	result := i.DB.Where("table_id = ?", tableIDParse).Order("created_at desc").First(invoice)
 	return invoice, result.Error
 }
+
+func (i *InvoiceGormRepository) AddTotalPriceByID(ctx context.Context, invoiceID string, price float64) error {
+	var invoice models.Invoice
+	result := i.DB.Where("id = ?", invoiceID).First(&invoice)
+	if result.Error == gorm.ErrRecordNotFound {
+		return nil
+	}
+	if result.Error != nil {
+		return result.Error
+	}
+	
+	invoice.TotalPrice += price
+
+	if err := i.DB.Save(&invoice).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (i *InvoiceGormRepository) SetPriceFeeFoodOverWeightByID(ctx context.Context, invoiceID string, price float64) error {
+	var invoice models.Invoice
+	result := i.DB.Where("id = ?", invoiceID).First(&invoice)
+	if result.Error == gorm.ErrRecordNotFound {
+		return nil
+	}
+	if result.Error != nil {
+		return result.Error
+	}
+	
+	invoice.PriceFeeFoodOverWeight = price
+
+	if err := i.DB.Save(&invoice).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (i *InvoiceGormRepository) SetCustomerPhoneByID(ctx context.Context, invoiceID string, customerPhone string) error {
+	var invoice models.Invoice
+	result := i.DB.Where("id = ?", invoiceID).First(&invoice)
+	if result.Error == gorm.ErrRecordNotFound {
+		return nil
+	}
+	if result.Error != nil {
+		return result.Error
+	}
+	
+	invoice.CustomerPhone = customerPhone
+
+	if err := i.DB.Save(&invoice).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

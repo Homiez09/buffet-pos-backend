@@ -724,6 +724,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/manage/invoices/charge-food-overweight": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Charge Fee Food Overweight By ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manage"
+                ],
+                "summary": "Charge Fee Food Overweight",
+                "parameters": [
+                    {
+                        "description": "Charge Fee Food Overweight Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.ChargeFeeFoodOverWeightRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/manage/invoices/paid": {
             "get": {
                 "security": [
@@ -1285,14 +1331,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/manage/settings/price-fee-overweight": {
+        "/manage/settings/price-fee-food-overweight": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get price fee overweight in setting.",
+                "description": "Get price fee food overweight in setting.",
                 "consumes": [
                     "application/json"
                 ],
@@ -1302,7 +1348,7 @@ const docTemplate = `{
                 "tags": [
                     "Manage"
                 ],
-                "summary": "Get Price Fee Overweight",
+                "summary": "Get Price Fee Food Overweight",
                 "parameters": [
                     {
                         "type": "string",
@@ -1337,15 +1383,15 @@ const docTemplate = `{
                 "tags": [
                     "Manage"
                 ],
-                "summary": "Set Price Fee Overweight",
+                "summary": "Set Price Fee Food Overweight",
                 "parameters": [
                     {
-                        "description": "Edit Price Fee Overweight Request",
+                        "description": "Edit Price Fee Food Overweight Request",
                         "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/requests.EditPriceFeeOverWeight"
+                            "$ref": "#/definitions/requests.EditPriceFeeFoodOverWeight"
                         }
                     },
                     {
@@ -1870,6 +1916,21 @@ const docTemplate = `{
                 }
             }
         },
+        "requests.ChargeFeeFoodOverWeightRequest": {
+            "type": "object",
+            "required": [
+                "invoice_id",
+                "total_food_weight"
+            ],
+            "properties": {
+                "invoice_id": {
+                    "type": "string"
+                },
+                "total_food_weight": {
+                    "type": "number"
+                }
+            }
+        },
         "requests.CustomerAddPointRequest": {
             "type": "object",
             "required": [
@@ -1923,13 +1984,13 @@ const docTemplate = `{
                 }
             }
         },
-        "requests.EditPriceFeeOverWeight": {
+        "requests.EditPriceFeeFoodOverWeight": {
             "type": "object",
             "required": [
-                "price_fee_overweight"
+                "price_fee_food_overweight"
             ],
             "properties": {
-                "price_fee_overweight": {
+                "price_fee_food_overweight": {
                     "type": "number"
                 }
             }
@@ -2097,6 +2158,9 @@ const docTemplate = `{
                 "createdAt": {
                     "type": "string"
                 },
+                "customer_phone": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
@@ -2105,6 +2169,9 @@ const docTemplate = `{
                 },
                 "peopleAmount": {
                     "type": "integer"
+                },
+                "price_fee_food_overweight": {
+                    "type": "number"
                 },
                 "tableId": {
                     "type": "string"

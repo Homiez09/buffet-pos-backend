@@ -54,6 +54,16 @@ definitions:
     - id
     - peopleAmount
     type: object
+  requests.ChargeFeeFoodOverWeightRequest:
+    properties:
+      invoice_id:
+        type: string
+      total_food_weight:
+        type: number
+    required:
+    - invoice_id
+    - total_food_weight
+    type: object
   requests.CustomerAddPointRequest:
     properties:
       phone:
@@ -90,12 +100,12 @@ definitions:
     - phone
     - pin
     type: object
-  requests.EditPriceFeeOverWeight:
+  requests.EditPriceFeeFoodOverWeight:
     properties:
-      price_fee_overweight:
+      price_fee_food_overweight:
         type: number
     required:
-    - price_fee_overweight
+    - price_fee_food_overweight
     type: object
   requests.EditPricePerPerson:
     properties:
@@ -204,12 +214,16 @@ definitions:
     properties:
       createdAt:
         type: string
+      customer_phone:
+        type: string
       id:
         type: string
       isPaid:
         type: boolean
       peopleAmount:
         type: integer
+      price_fee_food_overweight:
+        type: number
       tableId:
         type: string
       totalPrice:
@@ -788,6 +802,35 @@ paths:
       summary: Cancel Invoice
       tags:
       - Manage
+  /manage/invoices/charge-food-overweight:
+    put:
+      consumes:
+      - application/json
+      description: Charge Fee Food Overweight By ID
+      parameters:
+      - description: Charge Fee Food Overweight Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.ChargeFeeFoodOverWeightRequest'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Charge Fee Food Overweight
+      tags:
+      - Manage
   /manage/invoices/paid:
     get:
       consumes:
@@ -1115,11 +1158,11 @@ paths:
       summary: Get Orders By Table ID
       tags:
       - Manage
-  /manage/settings/price-fee-overweight:
+  /manage/settings/price-fee-food-overweight:
     get:
       consumes:
       - application/json
-      description: Get price fee overweight in setting.
+      description: Get price fee food overweight in setting.
       parameters:
       - description: Authorization
         in: header
@@ -1135,7 +1178,7 @@ paths:
             $ref: '#/definitions/responses.SettingResponse'
       security:
       - ApiKeyAuth: []
-      summary: Get Price Fee Overweight
+      summary: Get Price Fee Food Overweight
       tags:
       - Manage
     put:
@@ -1143,12 +1186,12 @@ paths:
       - application/json
       description: Update price fee overweight in setting.
       parameters:
-      - description: Edit Price Fee Overweight Request
+      - description: Edit Price Fee Food Overweight Request
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/requests.EditPriceFeeOverWeight'
+          $ref: '#/definitions/requests.EditPriceFeeFoodOverWeight'
       - description: Authorization
         in: header
         name: Authorization
@@ -1163,7 +1206,7 @@ paths:
             $ref: '#/definitions/responses.SuccessResponse'
       security:
       - ApiKeyAuth: []
-      summary: Set Price Fee Overweight
+      summary: Set Price Fee Food Overweight
       tags:
       - Manage
   /manage/settings/price-per-person:
