@@ -41,7 +41,7 @@ func main() {
 	userService := usecases.NewUserService(userRepo, cfg)
 	userHandler := rest.NewUserHandler(userService)
 
-	invoiceService := usecases.NewInvoiceService(invoiceRepo, tableRepo, orderRepo, cfg)
+	invoiceService := usecases.NewInvoiceService(invoiceRepo, tableRepo, orderRepo, settingRepo, cfg)
 	tableService := usecases.NewTableService(tableRepo, invoiceRepo, settingRepo, cfg)
 
 	tableHandler := rest.NewTableHandler(tableService)
@@ -58,7 +58,7 @@ func main() {
 	orderHandler := rest.NewOrderHandler(orderService)
 
 	customerRepo := gorm.NewCustomerGormRepository(db)
-	customerService := usecases.NewCustomerService(customerRepo, settingRepo, cfg)
+	customerService := usecases.NewCustomerService(customerRepo, invoiceRepo, settingRepo, cfg)
 	customerHandler := rest.NewCustomerHandler(customerService)
 
 
@@ -102,6 +102,7 @@ func main() {
 	manage.Get("/invoices/unpaid", invoiceHandler.GetAllUnpaidInvoices)
 	manage.Put("/invoices/set-paid", invoiceHandler.SetInvoicePaid)
 	manage.Delete("/invoices/:invoice_id", invoiceHandler.CancelInvoice)
+	manage.Put("/invoices/charge-food-overweight", invoiceHandler.ChargeFeeFoodOverWeight)
 
 	manage.Get("/categories", categoryHandler.FindAllCategories)
 	manage.Get("/categories/:id", categoryHandler.FindCategoryByID)
