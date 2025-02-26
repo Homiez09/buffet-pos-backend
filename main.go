@@ -37,6 +37,8 @@ func main() {
 	categoryRepo := gorm.NewCategoryGormRepository(db)
 	menuRepo := gorm.NewMenuGormRepository(db)
 	orderRepo := gorm.NewOrderGormRepository(db)
+	orderItemRepo := gorm.NewOrderItemGormRepository(db)
+	customerRepo := gorm.NewCustomerGormRepository(db)
 
 	userService := usecases.NewUserService(userRepo, cfg)
 	userHandler := rest.NewUserHandler(userService)
@@ -53,14 +55,14 @@ func main() {
 	menuService := usecases.NewMenuService(menuRepo, cfg, cld)
 	menuHandler := rest.NewMenuHandler(menuService)
 
-	orderItemRepo := gorm.NewOrderItemGormRepository(db)
 	orderService := usecases.NewOrderService(orderRepo, orderItemRepo, menuRepo, cfg)
 	orderHandler := rest.NewOrderHandler(orderService)
 
-	customerRepo := gorm.NewCustomerGormRepository(db)
 	customerService := usecases.NewCustomerService(customerRepo, invoiceRepo, settingRepo, cfg)
 	customerHandler := rest.NewCustomerHandler(customerService)
 
+	orderItemService := usecases.NewOrderItemService(orderItemRepo, cfg)
+	orderItemHandler := rest.NewOrderItemHandler(orderItemService)
 
 	app.Use(cors.New())
 
@@ -110,6 +112,8 @@ func main() {
 	manage.Delete("/categories/:id", categoryHandler.DeleteCategory)
 
 	manage.Get("/menus", menuHandler.FindAll)
+	//mark
+	manage.Get("/menus/best-selling", orderItemHandler.GetBestSellingMenu)
 	manage.Get("/menus/:id", menuHandler.FindByID)
 	manage.Post("/menus", menuHandler.Create)
 	manage.Put("/menus", menuHandler.Edit)

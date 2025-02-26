@@ -246,6 +246,23 @@ definitions:
       name:
         type: string
     type: object
+  responses.NumberMenu:
+    properties:
+      categoryId:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      imageUrl:
+        type: string
+      isAvailable:
+        type: boolean
+      name:
+        type: string
+      number:
+        type: integer
+    type: object
   responses.OrderDetail:
     properties:
       createdAt:
@@ -1067,6 +1084,31 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Find Menu By ID
+      tags:
+      - Manage
+  /manage/menus/best-selling:
+    get:
+      consumes:
+      - application/json
+      description: Get Best Selling Menu
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/responses.NumberMenu'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get Best Selling Menu
       tags:
       - Manage
   /manage/orders:
