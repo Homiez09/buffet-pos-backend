@@ -23,6 +23,7 @@ func main() {
 		&models.Order{},
 		&models.OrderItem{},
 		&models.Customer{},
+		&models.StaffNotification{},
 	); err != nil {
 		log.Fatal(err)
 	}

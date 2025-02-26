@@ -39,6 +39,7 @@ func main() {
 	orderRepo := gorm.NewOrderGormRepository(db)
 	orderItemRepo := gorm.NewOrderItemGormRepository(db)
 	customerRepo := gorm.NewCustomerGormRepository(db)
+	staffNotiRepo := gorm.NewStaffNotificationGormRepository(db)
 
 	userService := usecases.NewUserService(userRepo, cfg)
 	userHandler := rest.NewUserHandler(userService)
@@ -64,6 +65,9 @@ func main() {
 	orderItemService := usecases.NewOrderItemService(orderItemRepo, cfg)
 	orderItemHandler := rest.NewOrderItemHandler(orderItemService)
 
+	staffNotiService := usecases.NewStaffNotificationService(staffNotiRepo, cfg)
+	staffNotiHandler := rest.NewStaffNotificationHandler(staffNotiService)
+
 	app.Use(cors.New())
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
@@ -84,6 +88,8 @@ func main() {
 	customer.Get("/tables", tableHandler.FindCustomerTable)
 	customer.Get("/categories", categoryHandler.FindAllCategories)
 	customer.Get("/invoices", invoiceHandler.CustomerGetInvoice)
+	// staff-notification : calling staff
+	customer.Post("/staff-notifications", staffNotiHandler.NotifyStaff)
 
 	loyalty := app.Group("/loyalty", middleware.AuthMiddleware(cfg), middleware.RoleMiddleware(models.Employee, models.Manager))
 	loyalty.Post("/register", customerHandler.Register)
@@ -112,8 +118,9 @@ func main() {
 	manage.Delete("/categories/:id", categoryHandler.DeleteCategory)
 
 	manage.Get("/menus", menuHandler.FindAll)
-	//mark
+	// Best-Selling
 	manage.Get("/menus/best-selling", orderItemHandler.GetBestSellingMenu)
+
 	manage.Get("/menus/:id", menuHandler.FindByID)
 	manage.Post("/menus", menuHandler.Create)
 	manage.Put("/menus", menuHandler.Edit)
@@ -129,6 +136,11 @@ func main() {
 	manage.Put("/settings/use-point-per-person", settingHandler.SetUsePointPerPerson)
 	manage.Get("/settings/price-fee-food-overweight", settingHandler.GetPriceFeeFoodOverWeight)
 	manage.Put("/settings/price-fee-food-overweight", settingHandler.SetPriceFeeFoodOverWeight)
+
+	// staff notification
+	manage.Get("/staff-notifications", staffNotiHandler.GetAllStaffNotification)
+	manage.Get("staff-notifications/:status", staffNotiHandler.GetAllStaffNotificationByStatus)
+	manage.Put("/staff-notifications", staffNotiHandler.UpdateStaffNotificationStatus)
 
 	app.Listen(":3001")
 }
