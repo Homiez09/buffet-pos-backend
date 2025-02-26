@@ -19,11 +19,6 @@ type orderHandler struct {
 	service usecases.OrderUseCase
 }
 
-// GetBestSellingMenu implements OrderItemHandler.
-func (h *orderHandler) GetBestSellingMenu(c *fiber.Ctx) error {
-	panic("unimplemented")
-}
-
 func NewOrderHandler(service usecases.OrderUseCase) OrderHandler {
 	return &orderHandler{
 		service: service,
