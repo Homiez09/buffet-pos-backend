@@ -300,6 +300,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/customer/staff-notifications": {
+            "post": {
+                "description": "Notify to Staff",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customer"
+                ],
+                "summary": "Notify to Staff",
+                "parameters": [
+                    {
+                        "description": "Notify to Staff request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.StaffNotificationRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Access Code",
+                        "name": "AccessCode",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/customer/tables": {
             "get": {
                 "description": "Find customer table.",
@@ -1105,6 +1143,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/manage/menus/best-selling": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get Best Selling Menu",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manage"
+                ],
+                "summary": "Get Best Selling Menu",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.NumberMenu"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/manage/menus/{id}": {
             "get": {
                 "security": [
@@ -1574,6 +1652,131 @@ const docTemplate = `{
                 }
             }
         },
+        "/manage/staff-notifications": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get All Staff Notification.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manage"
+                ],
+                "summary": "Get All Staff Notification",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.StaffNotificationBase"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Set invoice as paid.",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manage"
+                ],
+                "summary": "Update Status Staff Notification",
+                "parameters": [
+                    {
+                        "description": "Update Staff Notification Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.UpdateStaffNotificationRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/manage/staff-notifications/{status}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get All Staff Notification By Status",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manage"
+                ],
+                "summary": "Get All Staff Notification By Status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Status Notification",
+                        "name": "status",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StaffNotificationBase"
+                        }
+                    }
+                }
+            }
+        },
         "/manage/tables": {
             "get": {
                 "security": [
@@ -1879,6 +2082,19 @@ const docTemplate = `{
                 "Employee"
             ]
         },
+        "models.StaffNotificationStatus": {
+            "type": "string",
+            "enum": [
+                "pending",
+                "accepted",
+                "rejected"
+            ],
+            "x-enum-varnames": [
+                "PENDING",
+                "ACCEPTED",
+                "REJECTED"
+            ]
+        },
         "requests.AddCategoryRequest": {
             "type": "object",
             "required": [
@@ -2047,6 +2263,17 @@ const docTemplate = `{
                 }
             }
         },
+        "requests.StaffNotificationRequest": {
+            "type": "object",
+            "required": [
+                "table_id"
+            ],
+            "properties": {
+                "table_id": {
+                    "type": "string"
+                }
+            }
+        },
         "requests.UpdateInvoiceStatusRequest": {
             "type": "object",
             "required": [
@@ -2070,6 +2297,17 @@ const docTemplate = `{
                 },
                 "table_id": {
                     "type": "string"
+                }
+            }
+        },
+        "requests.UpdateStaffNotificationRequest": {
+            "type": "object",
+            "properties": {
+                "staff_notification_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/models.StaffNotificationStatus"
                 }
             }
         },
@@ -2207,6 +2445,32 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.NumberMenu": {
+            "type": "object",
+            "properties": {
+                "categoryId": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "imageUrl": {
+                    "type": "string"
+                },
+                "isAvailable": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "integer"
+                }
+            }
+        },
         "responses.OrderDetail": {
             "type": "object",
             "properties": {
@@ -2240,6 +2504,26 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.StaffNotificationBase": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/models.StaffNotificationStatus"
+                },
+                "table_id": {
+                    "type": "string"
+                },
+                "updatedAt": {
                     "type": "string"
                 }
             }
