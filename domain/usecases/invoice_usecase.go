@@ -74,6 +74,7 @@ func (i *InvoiceService) GetAllPaidInvoices(ctx context.Context) ([]responses.In
 				PeopleAmount: invoice.PeopleAmount,
 				TotalPrice:   invoice.TotalPrice,
 				IsPaid:       invoice.IsPaid,
+				PriceFeeFoodOverWeight: invoice.PriceFeeFoodOverWeight,
 				TableID:      invoice.TableID,
 				CreatedAt:    invoice.CreatedAt,
 				UpdatedAt:    invoice.UpdatedAt,
