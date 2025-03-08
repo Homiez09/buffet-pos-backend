@@ -69,13 +69,13 @@ func (i *InvoiceGormRepository) Cancel(ctx context.Context, invoiceID string) er
 
 func (i *InvoiceGormRepository) GetAllUnpaid(ctx context.Context) ([]models.Invoice, error) {
 	var invoices []models.Invoice
-	result := i.DB.Where("is_paid = ?", false).Find(&invoices)
+	result := i.DB.Where("is_paid = ?", false).Order("created_at desc").Find(&invoices)
 	return invoices, result.Error
 }
 
 func (i *InvoiceGormRepository) GetAllPaid(ctx context.Context) ([]models.Invoice, error) {
 	var invoices []models.Invoice
-	result := i.DB.Where("is_paid = ?", true).Find(&invoices).Order("created_at desc")
+	result := i.DB.Where("is_paid = ?", true).Order("created_at desc").Find(&invoices)
 	return invoices, result.Error
 }
 
