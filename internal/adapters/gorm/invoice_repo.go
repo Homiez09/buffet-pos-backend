@@ -75,7 +75,7 @@ func (i *InvoiceGormRepository) GetAllUnpaid(ctx context.Context) ([]models.Invo
 
 func (i *InvoiceGormRepository) GetAllPaid(ctx context.Context) ([]models.Invoice, error) {
 	var invoices []models.Invoice
-	result := i.DB.Where("is_paid = ?", true).Find(&invoices)
+	result := i.DB.Where("is_paid = ?", true).Find(&invoices).Order("created_at desc")
 	return invoices, result.Error
 }
 
