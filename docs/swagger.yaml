@@ -605,6 +605,25 @@ paths:
       summary: Find Customer Table
       tags:
       - Customer
+  /general/menus/best-selling:
+    get:
+      consumes:
+      - application/json
+      description: Get Best Selling Menu
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/responses.NumberMenu'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get Best Selling Menu
+      tags:
+      - General
   /loyalty/add-point:
     post:
       consumes:
@@ -1146,31 +1165,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Find Menu By ID
-      tags:
-      - Manage
-  /manage/menus/best-selling:
-    get:
-      consumes:
-      - application/json
-      description: Get Best Selling Menu
-      parameters:
-      - description: Authorization
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/responses.NumberMenu'
-            type: array
-      security:
-      - ApiKeyAuth: []
-      summary: Get Best Selling Menu
       tags:
       - Manage
   /manage/orders:

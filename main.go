@@ -80,6 +80,9 @@ func main() {
 	auth.Post("/register", userHandler.Register)
 	auth.Post("/login", userHandler.Login)
 
+	general := app.Group("/general")
+    general.Get("/menus/best-selling", orderItemHandler.GetBestSellingMenu)
+
 	customer := app.Group("/customer", middleware.CustomerMiddleware(cfg, tableService))
 	customer.Get("/menus", menuHandler.CustomerFindAll)
 	customer.Get("/menus/:id", menuHandler.CustomerFindByID)
@@ -118,8 +121,6 @@ func main() {
 	manage.Delete("/categories/:id", categoryHandler.DeleteCategory)
 
 	manage.Get("/menus", menuHandler.FindAll)
-	// Best-Selling
-	manage.Get("/menus/best-selling", orderItemHandler.GetBestSellingMenu)
 
 	manage.Get("/menus/:id", menuHandler.FindByID)
 	manage.Post("/menus", menuHandler.Create)

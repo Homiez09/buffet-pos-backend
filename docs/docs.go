@@ -370,6 +370,37 @@ const docTemplate = `{
                 }
             }
         },
+        "/general/menus/best-selling": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get Best Selling Menu",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "General"
+                ],
+                "summary": "Get Best Selling Menu",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.NumberMenu"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/loyalty/add-point": {
             "post": {
                 "security": [
@@ -1138,46 +1169,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.SuccessResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/manage/menus/best-selling": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get Best Selling Menu",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Manage"
-                ],
-                "summary": "Get Best Selling Menu",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Authorization",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/responses.NumberMenu"
-                            }
                         }
                     }
                 }
