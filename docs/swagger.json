@@ -330,6 +330,45 @@
                 }
             }
         },
+        "/customer/staff-notifications/{table_id}": {
+            "get": {
+                "description": "Get Staff Notification By Table ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customer"
+                ],
+                "summary": "Get Staff Notification By Table ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Table ID",
+                        "name": "table_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Access Code",
+                        "name": "AccessCode",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StaffNotificationBase"
+                        }
+                    }
+                }
+            }
+        },
         "/customer/tables": {
             "get": {
                 "description": "Find customer table.",

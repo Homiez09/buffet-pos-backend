@@ -12,6 +12,7 @@ type StaffNotificationHandler interface {
 	GetAllStaffNotification(c *fiber.Ctx) error
 	GetAllStaffNotificationByStatus(c *fiber.Ctx) error
 	UpdateStaffNotificationStatus(c *fiber.Ctx) error
+	GetStaffNotificationByTableId(c *fiber.Ctx) error
 }
 
 type staffNotificationHandler struct {
@@ -129,4 +130,25 @@ func (s *staffNotificationHandler) UpdateStaffNotificationStatus(c *fiber.Ctx) e
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Status updated successfully",
 	})
+}
+
+// Get Staff Notification By Table ID
+// @Summary Get Staff Notification By Table ID
+// @Description Get Staff Notification By Table ID
+// @Tags Customer
+// @Accept json
+// @Produce json
+// @Param table_id path string true "Table ID"
+// @Success 200 {object} responses.StaffNotificationBase
+// @Router /customer/staff-notifications/{table_id} [get]
+// @param AccessCode header string true "Access Code"
+func (s *staffNotificationHandler) GetStaffNotificationByTableId(c *fiber.Ctx) error {
+	tableID := c.Params("table_id")
+	notification, err := s.service.GetStaffNotificationByTableId(c.Context(), tableID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(notification)
 }

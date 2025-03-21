@@ -15,6 +15,7 @@ type StaffNotificationUseCase interface {
 	NotifyStaff(ctx context.Context, req *requests.StaffNotificationRequest) error
 	GetAllStaffNotification(ctx context.Context) ([]responses.StaffNotificationBase, error)
 	GetAllStaffNotificationByStatus(ctx context.Context, status string) ([]responses.StaffNotificationBase, error)
+	GetStaffNotificationByTableId(ctx context.Context, status string) (responses.StaffNotificationBase, error)
 	UpdateStatus(ctx context.Context, req *requests.UpdateStaffNotificationRequest) error
 }
 
@@ -74,4 +75,12 @@ func (s *staffNotificationService) UpdateStatus(ctx context.Context, req *reques
 	}
 
 	return nil
+}
+
+func (s* staffNotificationService) GetStaffNotificationByTableId(ctx context.Context, table_id string) (responses.StaffNotificationBase, error) {
+	notification, err := s.staffNotificationRepo.FindByTableID(ctx, table_id)
+	if err != nil {
+		return responses.StaffNotificationBase{}, err
+	}
+	return *notification, nil
 }

@@ -81,7 +81,7 @@ func main() {
 	auth.Post("/login", userHandler.Login)
 
 	general := app.Group("/general")
-    general.Get("/menus/best-selling", orderItemHandler.GetBestSellingMenu)
+	general.Get("/menus/best-selling", orderItemHandler.GetBestSellingMenu)
 
 	customer := app.Group("/customer", middleware.CustomerMiddleware(cfg, tableService))
 	customer.Get("/menus", menuHandler.CustomerFindAll)
@@ -93,6 +93,7 @@ func main() {
 	customer.Get("/invoices", invoiceHandler.CustomerGetInvoice)
 	// staff-notification : calling staff
 	customer.Post("/staff-notifications", staffNotiHandler.NotifyStaff)
+	customer.Get("/staff-notifications/:table_id", staffNotiHandler.GetStaffNotificationByTableId)
 
 	loyalty := app.Group("/loyalty", middleware.AuthMiddleware(cfg), middleware.RoleMiddleware(models.Employee, models.Manager))
 	loyalty.Post("/register", customerHandler.Register)
@@ -140,7 +141,7 @@ func main() {
 
 	// staff notification
 	manage.Get("/staff-notifications", staffNotiHandler.GetAllStaffNotification)
-	manage.Get("staff-notifications/:status", staffNotiHandler.GetAllStaffNotificationByStatus)
+	manage.Get("/staff-notifications/:status", staffNotiHandler.GetAllStaffNotificationByStatus)
 	manage.Put("/staff-notifications", staffNotiHandler.UpdateStaffNotificationStatus)
 
 	app.Listen(":3001")

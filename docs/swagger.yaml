@@ -584,6 +584,32 @@ paths:
       summary: Notify to Staff
       tags:
       - Customer
+  /customer/staff-notifications/{table_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Staff Notification By Table ID
+      parameters:
+      - description: Table ID
+        in: path
+        name: table_id
+        required: true
+        type: string
+      - description: Access Code
+        in: header
+        name: AccessCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.StaffNotificationBase'
+      summary: Get Staff Notification By Table ID
+      tags:
+      - Customer
   /customer/tables:
     get:
       consumes:
