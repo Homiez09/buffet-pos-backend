@@ -69,7 +69,7 @@ func (s *StaffNotificationGormRepository) FindByTableID(ctx context.Context, tab
 
 func (s *StaffNotificationGormRepository) GetByTableID(ctx context.Context, tableID string) (*responses.StaffNotificationBase, error) {
 	var notification models.StaffNotification
-	if err := s.DB.Order("created_at desc").First(&notification, "table_id = ?", tableID).Error; err != nil {
+	if err := s.DB.First(&notification, "table_id = ?", tableID).Error; err != nil {
 		return nil, err
 	}
 
@@ -81,7 +81,6 @@ func (s *StaffNotificationGormRepository) GetByTableID(ctx context.Context, tabl
 		UpdatedAt: notification.UpdatedAt,
 	}, nil
 }
-	
 
 func (s *StaffNotificationGormRepository) GetAll(ctx context.Context) ([]responses.StaffNotificationBase, error) {
 	var notifications []models.StaffNotification
@@ -122,7 +121,6 @@ func (s *StaffNotificationGormRepository) GetAllByStatus(ctx context.Context, st
 
 	return response, nil
 }
-
 
 func (s *StaffNotificationGormRepository) UpdateStatus(ctx context.Context, req *requests.UpdateStaffNotificationRequest) error {
 	return s.DB.Model(&models.StaffNotification{}).
