@@ -54,7 +54,7 @@ func (s *StaffNotificationGormRepository) FindByID(ctx context.Context, staffNot
 
 func (s *StaffNotificationGormRepository) FindByTableID(ctx context.Context, tableID string) (*responses.StaffNotificationBase, error) {
 	var notification models.StaffNotification
-	if err := s.DB.First(&notification, "table_id = ?", tableID).Error; err != nil {
+	if err := s.DB.Last(&notification, "table_id = ?", tableID).Error; err != nil {
 		return nil, err
 	}
 
