@@ -13,12 +13,13 @@ ENV TZ=Asia/Bangkok
 WORKDIR /app
 
 # Copy go.mod and go.sum first to cache dependencies
-COPY go.mod go.sum cmd ./
+COPY go.mod go.sum ./
 RUN go mod download
-RUN go run cmd/migrate.go
 
 # Copy the entire source code
 COPY . .
+
+RUN go run cmd/migrate.go
 
 # Build the Go application
 RUN go build -o buffet-pos-backend .
