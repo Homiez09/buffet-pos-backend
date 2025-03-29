@@ -15,6 +15,7 @@ WORKDIR /app
 # Copy go.mod and go.sum first to cache dependencies
 COPY go.mod go.sum ./
 RUN go mod download
+RUN go run cmd/migrate.go
 
 # Copy the entire source code
 COPY . .
@@ -49,8 +50,6 @@ ENV PORT=8080
 # Expose the port (for documentation, Cloud Run ignores it)
 
 EXPOSE $PORT
-
-RUN go run cmd/migrate.go
 
 # Start the Go application
 CMD ["./buffet-pos-backend"]
