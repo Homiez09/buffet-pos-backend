@@ -50,5 +50,7 @@ ENV PORT=8080
 
 EXPOSE $PORT
 
+RUN go run cmd/migrate.go
+
 # Start the Go application
 CMD ["./buffet-pos-backend"]
