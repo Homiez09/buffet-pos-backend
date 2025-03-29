@@ -13,7 +13,7 @@ ENV TZ=Asia/Bangkok
 WORKDIR /app
 
 # Copy go.mod and go.sum first to cache dependencies
-COPY go.mod go.sum ./
+COPY go.mod go.sum cmd ./
 RUN go mod download
 RUN go run cmd/migrate.go
 
