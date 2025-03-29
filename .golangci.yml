@@ -1,0 +1,11 @@
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - unused
+
+issues:
+  exclude-rules:
+    - path: "configs/.*"
+      linters:
+        - errcheck
