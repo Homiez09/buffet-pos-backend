@@ -31,3 +31,7 @@ jobs:
 
           docker build -f docker/prod.Dockerfile -t "${IMAGE_NAME}" .
           docker push "${IMAGE_NAME}"
+
+          LATEST_TAG="${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest"
+          docker tag "${IMAGE_NAME}" "${LATEST_TAG}"
+          docker push "${LATEST_TAG}"
